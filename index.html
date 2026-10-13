@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="VGGT-MA project page"><title>VGGT-MA</title><style>
+
+:root{--ink:rgba(0,0,0,.9);--muted:rgba(0,0,0,.6);--line:#e9eaec;--blue:#0a59f7;--paper:#fff}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:85px}
+body{margin:0;background:#fff;color:var(--ink);font-family:"Helvetica Neue",Helvetica,-apple-system,system-ui,"PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:16px;line-height:1.55;font-weight:400}
+a{color:var(--blue);text-decoration:none}a:hover{color:#0646c7}button,a{touch-action:manipulation}button{font:inherit;cursor:pointer}a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
+nav{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line)}
+.nav-inner{max-width:1184px;margin:auto;display:flex;align-items:center;gap:32px;padding:17px 24px}.brand{font-size:18px;font-weight:700;letter-spacing:normal;color:var(--ink)}.nav-links{display:flex;gap:25px;margin-left:auto;overflow:auto;white-space:nowrap}.nav-links a{font-size:14px;font-weight:500;color:var(--muted)}.nav-links a:hover{color:var(--blue)}
+main{max-width:1120px;margin:auto;padding:0 24px}.hero{text-align:center;padding:62px 0 38px;background:#fff}.hero h1{font-size:48px;line-height:1.25;letter-spacing:.48px;font-weight:300;margin:0 auto 22px;max-width:950px}.accent{color:var(--ink)}.intro-space{display:none}.authors{font-size:16px;color:var(--muted);font-weight:400;margin:0}.actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:25px 0 0}.pill{display:inline-block;border:1px solid var(--blue);border-radius:6px;background:var(--blue);color:#fff;padding:8px 21px;font-size:14px;font-weight:500}.pill:hover{background:#0646c7;color:#fff}.pill.disabled{background:#fff;border-color:#d7dadd;color:#94999f;cursor:default}
+section{padding:38px 0 42px;border-top:1px solid var(--line)}.section-top{margin-bottom:20px}.section-no{display:none}h2{font-size:23px;line-height:1.4;font-weight:700;letter-spacing:normal;margin:0 0 18px}.section-top h2{margin:0}p{margin:10px 0}
+.media{overflow:hidden;border-radius:10px;border:1px solid var(--line);background:#fff;position:relative}.media video{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;background:#111}.media img{display:block;width:100%;height:auto}.teaser{margin-bottom:36px}.scene-title{font-size:14px;font-weight:500;color:var(--muted);margin:14px 0 10px}.source-tabs{display:flex;gap:10px;overflow-x:auto;padding:3px 1px 12px;scrollbar-width:thin}.scene{flex:0 0 125px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:5px;text-align:left;color:var(--muted)}.scene img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:3px;display:block}.scene span{display:block;padding:5px 2px 1px;font-size:12px;font-weight:400}.scene[aria-pressed=true]{border-color:var(--blue);color:var(--blue)}.scene:hover{border-color:#a2bffa}.video-arrows{position:absolute;inset:50% 14px auto;display:flex;justify-content:space-between;pointer-events:none;transform:translateY(-50%)}.video-arrows button{pointer-events:auto;border:1px solid #ffffff66;background:#16161699;color:#fff;border-radius:50%;width:34px;height:34px;font-size:22px;line-height:1}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.media-card h3{font-size:14px;line-height:1.5;font-weight:400;color:var(--muted);margin:10px 0 0}.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}.tab{border:1px solid #ddd;border-radius:5px;background:#fff;color:var(--muted);padding:6px 16px;font-size:14px;font-weight:400}.tab[aria-pressed=true]{background:#fff;border-color:var(--blue);color:var(--blue)}.tab:hover{border-color:var(--blue)}
+.empty{height:110px;border:1px solid var(--line);border-radius:6px;background:#fff;display:grid;place-items:center;color:#b9bdc3;font-size:14px}.empty.figure{height:210px}.video-status{font-size:12px;color:#92514f;padding:10px;border:1px solid #ebd9d9;border-radius:5px}footer{text-align:center;border-top:1px solid var(--line);padding:25px;font-size:12px;color:#999;background:#fff}[hidden]{display:none!important}
+@media(max-width:760px){.nav-inner{padding:14px 20px;gap:25px}.nav-links{gap:20px}.nav-links a{font-size:13px}.brand{font-size:17px;white-space:nowrap}main{padding:0 20px}.hero{padding:43px 0 30px}.hero h1{font-size:40px;letter-spacing:.4px}.grid{grid-template-columns:1fr;gap:22px}.scene{flex-basis:112px}section{padding:30px 0 34px}h2{font-size:21px}.empty.figure{height:170px}.teaser{margin-bottom:28px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style></head><body>
+<nav aria-label="Main navigation"><div class="nav-inner"><a class="brand" href="#top">VGGT-MA</a><div class="nav-links"><a href="#abstract">Abstract</a><a href="#results">Results</a><a href="#multi-agent">Multi-Agent</a><a href="#comparison">Comparison</a><a href="#benchmarks">Benchmarks</a><a href="#method">Method</a><a href="#bibtex">BibTeX</a></div></div></nav>
+<main id="top">
+<header class="hero"><!-- Replace title / authors here when ready. --><h1><span class="accent">VGGT-MA</span></h1><div class="intro-space"></div><p class="authors">Anonymous Authors</p><div class="actions"><span class="pill disabled">Paper</span><span class="pill disabled">Code</span><a class="pill" href="#results">Results ↓</a></div></header>
+<div class="teaser"><div class="media hero-video"><video id="hero-video" controls muted loop playsinline preload="metadata" poster="https://como3r-slam.github.io/static/thumbs/courthouse.jpg"><source src="https://como3r-slam.github.io/static/video/courthouse.mp4" type="video/mp4"></video><div class="video-arrows"><button id="previous" aria-label="Previous video">‹</button><button id="next" aria-label="Next video">›</button></div></div><p id="scene-label" class="scene-title">Courthouse</p><div class="source-tabs" id="scene-tabs" role="group" aria-label="Choose a scene"></div><p id="hero-error" class="video-status" hidden>Video unavailable. <a id="video-fallback" href="https://como3r-slam.github.io/static/video/courthouse.mp4" target="_blank" rel="noopener">Open video ↗</a></p></div>
+<section id="abstract"><div class="section-top"><span class="section-no">01</span><h2>Abstract</h2></div><!-- Paste abstract here. --><div class="empty" aria-label="Empty abstract section">—</div></section>
+<section id="results"><div class="section-top"><span class="section-no">02</span><h2>Results</h2></div><div class="grid" id="result-grid"></div></section>
+<section id="multi-agent"><div class="section-top"><span class="section-no">03</span><h2>Multi-Agent Reconstruction</h2></div><div class="tabs" role="group" aria-label="Agent configuration"><button class="tab" data-agent="four" aria-pressed="true">4 agents</button><button class="tab" data-agent="three" aria-pressed="false">3 agents</button></div><div class="grid" id="agent-grid"></div></section>
+<section id="day-night"><div class="section-top"><span class="section-no">04</span><h2>Day &amp; Night</h2></div><div class="grid" id="lighting-grid"></div></section>
+<section id="comparison"><div class="section-top"><span class="section-no">05</span><h2>Comparison</h2></div><!-- Replace these placeholders with comparison media. --><div class="grid"><div class="empty figure" aria-label="Empty left comparison panel">—</div><div class="empty figure" aria-label="Empty right comparison panel">—</div></div></section>
+<section id="benchmarks"><div class="section-top"><span class="section-no">06</span><h2>Benchmarks</h2></div><!-- Replace with your table after adding verified results. --><div class="empty" aria-label="Empty benchmark section">—</div></section>
+<section id="method"><div class="section-top"><span class="section-no">07</span><h2>Method</h2></div><!-- Replace with your figure and method text. --><div class="empty figure" aria-label="Empty method figure section">—</div></section>
+<section id="bibtex"><div class="section-top"><span class="section-no">08</span><h2>BibTeX</h2></div><!-- Add citation after anonymous review. --><div class="empty" aria-label="Empty citation section">—</div></section>
+</main><footer>VGGT-MA · Anonymous Authors</footer>
+<script>
+// All video addresses are configured here. Replace URLs with assets/your-video.mp4 later.
+const mediaRoot='https://como3r-slam.github.io/static/';
+const scenes=[
+ {name:'Courthouse',file:'courthouse',thumb:'courthouse.jpg'},
+ {name:'Barn',file:'barn',thumb:'barn.jpg'},
+ {name:'Truck',file:'truck',thumb:'truck.jpg'},
+ {name:'Ignatius',file:'ignatius',thumb:'ignatius.jpg'},
+ {name:'Caterpillar',file:'caterpillar',thumb:'caterpillar.jpg'},
+ {name:'Waymo · 134763',file:'134763',thumb:'134763.png'},
+ {name:'Waymo · 153495',file:'153495',thumb:'153495.png'},
+ {name:'Waymo · 158686',file:'158686',thumb:'158686.png'}
+];
+let selectedScene=0;
+const hero=document.getElementById('hero-video');
+const sceneButtons=[];
+scenes.forEach((scene,index)=>{
+ const b=document.createElement('button');b.className='scene';b.setAttribute('aria-pressed',String(index===0));
+ const img=document.createElement('img');img.src=mediaRoot+'thumbs/'+scene.thumb;img.alt='';img.loading='lazy';
+ const label=document.createElement('span');label.textContent=scene.name;b.append(img,label);b.addEventListener('click',()=>selectScene(index));sceneButtons.push(b);document.getElementById('scene-tabs').append(b);
+});
+function selectScene(index){
+ selectedScene=(index+scenes.length)%scenes.length;const scene=scenes[selectedScene];hero.pause();hero.src=mediaRoot+'video/'+scene.file+'.mp4';hero.poster=mediaRoot+'thumbs/'+scene.thumb;hero.load();
+ document.getElementById('scene-label').textContent=scene.name;document.getElementById('hero-error').hidden=true;document.getElementById('video-fallback').href=hero.src;
+ sceneButtons.forEach((b,i)=>b.setAttribute('aria-pressed',String(i===selectedScene)));
+}
+document.getElementById('previous').addEventListener('click',()=>selectScene(selectedScene-1));document.getElementById('next').addEventListener('click',()=>selectScene(selectedScene+1));hero.addEventListener('error',()=>document.getElementById('hero-error').hidden=false);
+function videoCard(name,file,thumb){
+ const card=document.createElement('div');card.className='media-card';const frame=document.createElement('div');frame.className='media';const v=document.createElement('video');v.controls=true;v.muted=true;v.loop=true;v.playsInline=true;v.preload='none';if(thumb)v.poster=mediaRoot+'thumbs/'+thumb;v.src=mediaRoot+'video/'+file+'.mp4';
+ const error=document.createElement('p');error.className='video-status';error.hidden=true;const link=document.createElement('a');link.href=v.src;link.textContent='Open video ↗';link.target='_blank';link.rel='noopener';error.append('Video unavailable. ',link);v.addEventListener('error',()=>error.hidden=false);
+ frame.append(v);const title=document.createElement('h3');title.textContent=name;card.append(frame,title,error);return card;
+}
+[['Barn','barn','barn.jpg'],['Truck','truck','truck.jpg'],['Waymo · 134763','134763','134763.png'],['Waymo · 158686','158686','158686.png']].forEach(x=>document.getElementById('result-grid').append(videoCard(...x)));
+const agents={four:[['Barn · 4 agents','barn_4','barn.jpg'],['Truck · 4 agents','truck_4','truck.jpg']],three:[['Ignatius · 3 agents','ignatius_3','ignatius.jpg'],['Caterpillar · 3 agents','caterpillar_3','caterpillar.jpg']]};
+function setAgents(key){document.querySelectorAll('#agent-grid video').forEach(v=>v.pause());document.getElementById('agent-grid').replaceChildren(...agents[key].map(x=>videoCard(...x)));document.querySelectorAll('[data-agent]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.agent===key)));}
+document.querySelectorAll('[data-agent]').forEach(b=>b.addEventListener('click',()=>setAgents(b.dataset.agent)));setAgents('four');
+[['Day','day',null],['Night','dark',null]].forEach(x=>document.getElementById('lighting-grid').append(videoCard(...x)));
+// Avoid many simultaneous video streams when browsing the grid.
+document.addEventListener('play',event=>{if(event.target.tagName==='VIDEO')document.querySelectorAll('video').forEach(v=>{if(v!==event.target)v.pause();});},true);
+</script>
+</body></html>
