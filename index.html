@@ -44,8 +44,8 @@ button{font:inherit;color:inherit}
 .venue{margin-top:1.2rem;font-family:var(--head);font-size:1.1rem;font-weight:700}
 .links{display:flex;flex-wrap:wrap;justify-content:center;gap:.8rem;margin-top:2rem}
 
-.btn{--glow:rgba(0,0,0,.4);position:relative;display:inline-flex;align-items:center;gap:.45em;height:2.5rem;padding-inline:1.1rem;border:0;border-radius:2.5rem;background:#363636;color:#fff;font-family:var(--head);font-size:1rem;font-weight:500;white-space:nowrap;text-decoration:none;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.08);transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
-.btn svg{width:16px;height:16px;flex:none;fill:currentColor;transition:transform .2s ease}
+.btn{--glow:rgba(0,0,0,.4);position:relative;display:inline-flex;align-items:center;gap:.5em;height:2.9rem;padding-inline:1.35rem;border:0;border-radius:2.5rem;background:#363636;color:#fff;font-family:var(--head);font-size:1.15rem;font-weight:500;white-space:nowrap;text-decoration:none;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.08);transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
+.btn svg{width:18px;height:18px;flex:none;fill:currentColor;transition:transform .2s ease}
 .btn:hover{transform:translateY(-2px);box-shadow:0 12px 22px -10px var(--glow),0 2px 4px rgba(0,0,0,.06)}
 .btn:hover svg{transform:scale(1.12)}
 .btn:active{transform:translateY(0) scale(.97);box-shadow:0 1px 2px rgba(0,0,0,.1)}
@@ -132,8 +132,9 @@ td.b{font-weight:700}
 
 /* Figure */
 .figure{padding:1rem;border:1px solid #E5E5E5;border-radius:12px;background:#fff}
-.figure .slot{position:relative;aspect-ratio:21/8}
-.figure .slot img{width:100%;height:100%;object-fit:contain}
+.figure .slot{position:relative}
+.figure .slot.blank{aspect-ratio:21/8}
+.figure .slot img{display:block;width:100%;height:auto}
 .figure .empty{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;background:#F7F9FD;border-radius:8px}
 .figure-caption{margin-top:.75rem;font-size:.95rem;text-align:left}
 
@@ -192,7 +193,8 @@ footer{padding:2.5rem 0 3rem;border-top:1px solid rgba(60,40,170,.08);font-size:
 
 <section class="section band" id="abstract" data-nav="Abstract"><div class="container"><div class="column">
   <h2>Abstract</h2>
-  <p class="text measure" style="text-align:center">Coming soon.</p>
+  <!-- Placeholder abstract (CoMo3R-SLAM, arXiv:2605.30488) until ours is released. -->
+  <p class="text measure">Outdoor robot teams need a shared dense map despite limited overlap, independent reference frames, and uncertain monocular scale. Collaborative dense SLAM systems typically resolve this with depth sensors, which add payload, power, and calibration cost. We present CoMo3R-SLAM, a collaborative monocular dense SLAM system that places learned feed-forward 3D reconstruction priors at the center of the multi-agent problem: their dense pointmaps anchor scale across agents and supply correspondences strong enough to verify inter-agent links geometrically. Each agent tracks and fuses its own keyframes from a single RGB stream, while a coordinator retrieves cross-agent keyframes over the prior's encoder features, verifies them by bidirectional dense pointmap matching, synchronizes the independent similarity gauges in closed form, and refines every keyframe in one unified multi-agent sim(3) graph. Finally, a pose-depth alternation over geometry-aware segments lets inter-agent observations constrain dense structure as well as trajectories. Requiring neither measured depth nor supplied intrinsics, CoMo3R-SLAM attains the lowest trajectory error on three of four Tanks and Temples scenes, and competitive accuracy on Waymo driving sequences, while running at approximately 6-8 FPS on RTX 3080 Ti. A long-horizon traversal, independently captured day and night streams, and teams of up to four agents further map its operating range.</p>
 </div></div></section>
 
 <section class="section" id="results" data-nav="Results"><div class="container">
@@ -232,7 +234,7 @@ footer{padding:2.5rem 0 3rem;border-top:1px solid rgba(60,40,170,.08);font-size:
 <section class="section band" id="method" data-nav="Method"><div class="container"><div class="column">
   <h2>Method</h2>
   <div class="figure"><div class="slot" id="method-figure"></div></div>
-  <p class="figure-caption">Overview of VGGT-MA. Each robot builds an SL(4) keyframe graph with a frozen VGGT and sends its graph, place-recognition descriptors and, on request, a few keyframes to the server. The server discovers places observed by two robots, reconstructs the keyframes of both robots that observe such a place in one forward pass and verifies the loop by attention, attaches the loop submap to each robot through constraints between two reconstructions of the same image, which differ by scale and intrinsic ratio, and optimizes the team graph on SL(4). A final photometric refinement estimates a Gaussian map together with keyframe poses and per-keyframe intrinsics.</p>
+  <p class="figure-caption">System overview. Independent monocular front-ends use the MASt3R prior for pointmap matching, tracking, and local fusion. The coordinator retrieves and geometrically verifies cross-agent keyframes, synchronizes their map components, and refines a shared similarity graph. Terminal refinement alternates global poses and geometry-aware segment depths.</p>
 </div></div></section>
 
 <section class="section" id="bibtex" data-nav="BibTeX"><div class="container"><div class="column">
@@ -415,7 +417,7 @@ const MEDIA = {
   },
   "method": {
     "name": "Method figure",
-    "src": ""
+    "src": "https://arxiv.org/html/2605.30488v2/method.png"
   }
 };
 
@@ -558,7 +560,7 @@ MEDIA.dayNight.forEach(it => document.getElementById('lighting-grid').append(til
 })();
 
 /* Method figure */
-(function () { const host = document.getElementById('method-figure'); host.append(media(MEDIA.method) || empty(MEDIA.method.name)); })();
+(function () { const host = document.getElementById('method-figure'); const m = media(MEDIA.method); host.classList.toggle('blank', !m); host.append(m || empty(MEDIA.method.name)); })();
 /* Reading position rail */
 (function () {
   const nav = document.getElementById('pnav'), fillBar = document.getElementById('pnav-fill');
