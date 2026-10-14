@@ -33,7 +33,8 @@ button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
 
 .container{width:100%;max-width:1100px;margin-inline:auto;padding-inline:1.5rem}
-.column{max-width:860px;margin-inline:auto}
+.column{width:100%}
+.measure{max-width:760px;margin-inline:auto}
 
 /* Header */
 .hero{padding:4.5rem 0 2.25rem;text-align:center}
@@ -191,7 +192,7 @@ footer{padding:2.5rem 0 3rem;border-top:1px solid rgba(60,40,170,.08);font-size:
 
 <section class="section band" id="abstract" data-nav="Abstract"><div class="container"><div class="column">
   <h2>Abstract</h2>
-  <p class="text" style="text-align:center">Coming soon.</p>
+  <p class="text measure" style="text-align:center">Coming soon.</p>
 </div></div></section>
 
 <section class="section" id="results" data-nav="Results"><div class="container">
@@ -222,13 +223,13 @@ footer{padding:2.5rem 0 3rem;border-top:1px solid rgba(60,40,170,.08);font-size:
   </div>
 </div></div></section>
 
-<section class="section" id="benchmarks" data-nav="Benchmarks"><div class="container"><div class="column" style="max-width:1000px">
+<section class="section" id="benchmarks" data-nav="Benchmarks"><div class="container"><div class="column">
   <h2>Benchmarks</h2>
   <div class="table-wrap"><table id="bench"></table></div>
   <p class="table-note" id="bench-note"></p>
 </div></div></section>
 
-<section class="section band" id="method" data-nav="Method"><div class="container"><div class="column" style="max-width:1000px">
+<section class="section band" id="method" data-nav="Method"><div class="container"><div class="column">
   <h2>Method</h2>
   <div class="figure"><div class="slot" id="method-figure"></div></div>
   <p class="figure-caption">Overview of VGGT-MA. Each robot builds an SL(4) keyframe graph with a frozen VGGT and sends its graph, place-recognition descriptors and, on request, a few keyframes to the server. The server discovers places observed by two robots, reconstructs the keyframes of both robots that observe such a place in one forward pass and verifies the loop by attention, attaches the loop submap to each robot through constraints between two reconstructions of the same image, which differ by scale and intrinsic ratio, and optimizes the team graph on SL(4). A final photometric refinement estimates a Gaussian map together with keyframe poses and per-keyframe intrinsics.</p>
