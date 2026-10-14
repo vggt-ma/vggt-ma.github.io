@@ -1,71 +1,428 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="VGGT-MA project page"><title>VGGT-MA</title><style>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="VGGT-MA: Multi-Robot Dense SLAM with Uncalibrated Heterogeneous Cameras">
+<title>VGGT-MA</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Ccircle cx='10' cy='4.5' r='3' fill='%230A59F7'/%3E%3Ccircle cx='4' cy='15' r='3' fill='%23ED6F21'/%3E%3Ccircle cx='16' cy='15' r='3' fill='%2364BB5C'/%3E%3C/svg%3E">
+<style>
+/* HarmonyOS Sans: unmodified font files in fonts/, redistributed under the
+   HarmonyOS Sans Fonts License Agreement (fonts/HarmonyOS-Sans-LICENSE.txt). */
+@font-face{font-family:"HarmonyOS Sans";src:url("fonts/HarmonyOS_Sans_Light.ttf") format("truetype");font-weight:300;font-display:swap}
+@font-face{font-family:"HarmonyOS Sans";src:url("fonts/HarmonyOS_Sans_Regular.ttf") format("truetype");font-weight:400;font-display:swap}
+@font-face{font-family:"HarmonyOS Sans";src:url("fonts/HarmonyOS_Sans_Medium.ttf") format("truetype");font-weight:500;font-display:swap}
+@font-face{font-family:"HarmonyOS Sans";src:url("fonts/HarmonyOS_Sans_Bold.ttf") format("truetype");font-weight:600 700;font-display:swap}
 
-:root{--ink:rgba(0,0,0,.9);--muted:rgba(0,0,0,.6);--line:#e9eaec;--blue:#0a59f7;--paper:#fff}
-*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:85px}
-body{margin:0;background:#fff;color:var(--ink);font-family:"Helvetica Neue",Helvetica,-apple-system,system-ui,"PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:16px;line-height:1.55;font-weight:400}
-a{color:var(--blue);text-decoration:none}a:hover{color:#0646c7}button,a{touch-action:manipulation}button{font:inherit;cursor:pointer}a:focus-visible,button:focus-visible{outline:2px solid var(--blue);outline-offset:4px}
-nav{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line)}
-.nav-inner{max-width:1184px;margin:auto;display:flex;align-items:center;gap:32px;padding:17px 24px}.brand{font-size:18px;font-weight:700;letter-spacing:normal;color:var(--ink)}.nav-links{display:flex;gap:25px;margin-left:auto;overflow:auto;white-space:nowrap}.nav-links a{font-size:14px;font-weight:500;color:var(--muted)}.nav-links a:hover{color:var(--blue)}
-main{max-width:1120px;margin:auto;padding:0 24px}.hero{text-align:center;padding:62px 0 38px;background:#fff}.hero h1{font-size:48px;line-height:1.25;letter-spacing:.48px;font-weight:300;margin:0 auto 22px;max-width:950px}.accent{color:var(--ink)}.intro-space{display:none}.authors{font-size:16px;color:var(--muted);font-weight:400;margin:0}.actions{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:25px 0 0}.pill{display:inline-block;border:1px solid var(--blue);border-radius:6px;background:var(--blue);color:#fff;padding:8px 21px;font-size:14px;font-weight:500}.pill:hover{background:#0646c7;color:#fff}.pill.disabled{background:#fff;border-color:#d7dadd;color:#94999f;cursor:default}
-section{padding:38px 0 42px;border-top:1px solid var(--line)}.section-top{margin-bottom:20px}.section-no{display:none}h2{font-size:23px;line-height:1.4;font-weight:700;letter-spacing:normal;margin:0 0 18px}.section-top h2{margin:0}p{margin:10px 0}
-.media{overflow:hidden;border-radius:10px;border:1px solid var(--line);background:#fff;position:relative}.media video{display:block;width:100%;aspect-ratio:16/9;object-fit:contain;background:#111}.media img{display:block;width:100%;height:auto}.teaser{margin-bottom:36px}.scene-title{font-size:14px;font-weight:500;color:var(--muted);margin:14px 0 10px}.source-tabs{display:flex;gap:10px;overflow-x:auto;padding:3px 1px 12px;scrollbar-width:thin}.scene{flex:0 0 125px;background:#fff;border:1px solid var(--line);border-radius:6px;padding:5px;text-align:left;color:var(--muted)}.scene img{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:3px;display:block}.scene span{display:block;padding:5px 2px 1px;font-size:12px;font-weight:400}.scene[aria-pressed=true]{border-color:var(--blue);color:var(--blue)}.scene:hover{border-color:#a2bffa}.video-arrows{position:absolute;inset:50% 14px auto;display:flex;justify-content:space-between;pointer-events:none;transform:translateY(-50%)}.video-arrows button{pointer-events:auto;border:1px solid #ffffff66;background:#16161699;color:#fff;border-radius:50%;width:34px;height:34px;font-size:22px;line-height:1}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}.media-card h3{font-size:14px;line-height:1.5;font-weight:400;color:var(--muted);margin:10px 0 0}.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}.tab{border:1px solid #ddd;border-radius:5px;background:#fff;color:var(--muted);padding:6px 16px;font-size:14px;font-weight:400}.tab[aria-pressed=true]{background:#fff;border-color:var(--blue);color:var(--blue)}.tab:hover{border-color:var(--blue)}
-.empty{height:110px;border:1px solid var(--line);border-radius:6px;background:#fff;display:grid;place-items:center;color:#b9bdc3;font-size:14px}.empty.figure{height:210px}.video-status{font-size:12px;color:#92514f;padding:10px;border:1px solid #ebd9d9;border-radius:5px}footer{text-align:center;border-top:1px solid var(--line);padding:25px;font-size:12px;color:#999;background:#fff}[hidden]{display:none!important}
-@media(max-width:760px){.nav-inner{padding:14px 20px;gap:25px}.nav-links{gap:20px}.nav-links a{font-size:13px}.brand{font-size:17px;white-space:nowrap}main{padding:0 20px}.hero{padding:43px 0 30px}.hero h1{font-size:40px;letter-spacing:.4px}.grid{grid-template-columns:1fr;gap:22px}.scene{flex-basis:112px}section{padding:30px 0 34px}h2{font-size:21px}.empty.figure{height:170px}.teaser{margin-bottom:28px}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-</style></head><body>
-<nav aria-label="Main navigation"><div class="nav-inner"><a class="brand" href="#top">VGGT-MA</a><div class="nav-links"><a href="#abstract">Abstract</a><a href="#results">Results</a><a href="#multi-agent">Multi-Agent</a><a href="#comparison">Comparison</a><a href="#benchmarks">Benchmarks</a><a href="#method">Method</a><a href="#bibtex">BibTeX</a></div></div></nav>
-<main id="top">
-<header class="hero"><!-- Replace title / authors here when ready. --><h1><span class="accent">VGGT-MA</span></h1><div class="intro-space"></div><p class="authors">Anonymous Authors</p><div class="actions"><span class="pill disabled">Paper</span><span class="pill disabled">Code</span><a class="pill" href="#results">Results ↓</a></div></header>
-<div class="teaser"><div class="media hero-video"><video id="hero-video" controls muted loop playsinline preload="metadata" poster="https://como3r-slam.github.io/static/thumbs/courthouse.jpg"><source src="https://como3r-slam.github.io/static/video/courthouse.mp4" type="video/mp4"></video><div class="video-arrows"><button id="previous" aria-label="Previous video">‹</button><button id="next" aria-label="Next video">›</button></div></div><p id="scene-label" class="scene-title">Courthouse</p><div class="source-tabs" id="scene-tabs" role="group" aria-label="Choose a scene"></div><p id="hero-error" class="video-status" hidden>Video unavailable. <a id="video-fallback" href="https://como3r-slam.github.io/static/video/courthouse.mp4" target="_blank" rel="noopener">Open video ↗</a></p></div>
-<section id="abstract"><div class="section-top"><span class="section-no">01</span><h2>Abstract</h2></div><!-- Paste abstract here. --><div class="empty" aria-label="Empty abstract section">—</div></section>
-<section id="results"><div class="section-top"><span class="section-no">02</span><h2>Results</h2></div><div class="grid" id="result-grid"></div></section>
-<section id="multi-agent"><div class="section-top"><span class="section-no">03</span><h2>Multi-Agent Reconstruction</h2></div><div class="tabs" role="group" aria-label="Agent configuration"><button class="tab" data-agent="four" aria-pressed="true">4 agents</button><button class="tab" data-agent="three" aria-pressed="false">3 agents</button></div><div class="grid" id="agent-grid"></div></section>
-<section id="day-night"><div class="section-top"><span class="section-no">04</span><h2>Day &amp; Night</h2></div><div class="grid" id="lighting-grid"></div></section>
-<section id="comparison"><div class="section-top"><span class="section-no">05</span><h2>Comparison</h2></div><!-- Replace these placeholders with comparison media. --><div class="grid"><div class="empty figure" aria-label="Empty left comparison panel">—</div><div class="empty figure" aria-label="Empty right comparison panel">—</div></div></section>
-<section id="benchmarks"><div class="section-top"><span class="section-no">06</span><h2>Benchmarks</h2></div><!-- Replace with your table after adding verified results. --><div class="empty" aria-label="Empty benchmark section">—</div></section>
-<section id="method"><div class="section-top"><span class="section-no">07</span><h2>Method</h2></div><!-- Replace with your figure and method text. --><div class="empty figure" aria-label="Empty method figure section">—</div></section>
-<section id="bibtex"><div class="section-top"><span class="section-no">08</span><h2>BibTeX</h2></div><!-- Add citation after anonymous review. --><div class="empty" aria-label="Empty citation section">—</div></section>
-</main><footer>VGGT-MA · Anonymous Authors</footer>
+:root{
+  --brand:#0A59F7; --brand-hover:#317AF7; --orange:#ED6F21; --green:#64BB5C;
+  --text:rgba(0,0,0,.9); --dim:rgba(0,0,0,.6); --faint:rgba(0,0,0,.4);
+  --bg:#FFFFFF; --surface:#F1F3F5; --surface-2:#E6E9ED; --line:rgba(0,0,0,.08);
+  --maxw:1120px; --measure:760px;
+  --font:"HarmonyOS Sans","HarmonyOS Sans SC","Noto Sans SC","PingFang SC",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:400 16.5px/1.65 var(--font);-webkit-font-smoothing:antialiased}
+a{color:var(--brand);text-decoration:none}
+a:hover{color:var(--brand-hover)}
+img,video{max-width:100%}
+button{font:inherit}
+[hidden]{display:none!important}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.measure{max-width:var(--measure);margin-left:auto;margin-right:auto}
+section{padding:62px 0}
+section + section{border-top:1px solid var(--line)}
+h2{margin:0 0 12px;font-size:32px;font-weight:700;line-height:1.2;letter-spacing:-.01em;text-align:center}
+h2::before{content:"";display:block;width:34px;height:3px;margin:0 auto 18px;border-radius:2px;background:linear-gradient(90deg,var(--brand),var(--orange),var(--green))}
+.lede{max-width:var(--measure);margin:0 auto 30px;color:var(--dim);font-size:16px;text-align:center}
+.prose{font-size:17.5px;line-height:1.7;text-align:left}
+.prose b{color:var(--brand);font-weight:600}
+.caption{max-width:110ch;margin:14px auto 0;color:var(--faint);font-size:14px;line-height:1.6;text-align:center}
+
+/* Navigation */
+nav.top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.86);-webkit-backdrop-filter:saturate(180%) blur(12px);backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line)}
+nav.top .wrap{display:flex;align-items:center;gap:18px;height:54px}
+.brand{flex:none;color:var(--brand);font-size:18px;font-weight:700;letter-spacing:-.01em}
+.brand:hover{color:var(--brand)}
+.navlinks{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.navlinks::-webkit-scrollbar{display:none}
+.navlinks a{padding:8px 11px;border-radius:8px;color:var(--dim);font-size:14px;font-weight:500;white-space:nowrap;transition:background .15s,color .15s}
+.navlinks a:hover{background:var(--surface);color:var(--text)}
+.navpaper{display:inline-flex;flex:none;align-items:center;gap:6px;padding:8px 14px;border-radius:999px;background:#15171A;color:#fff;font-size:13px;font-weight:500}
+.navpaper:hover{background:var(--brand);color:#fff}
+.navpaper svg{width:14px;height:14px}
+
+/* Header */
+header{position:relative;padding:78px 0 52px;text-align:center;
+  background:radial-gradient(55% 60% at 12% 0%,rgba(10,89,247,.13),transparent 70%),radial-gradient(45% 55% at 88% 8%,rgba(237,111,33,.10),transparent 70%),radial-gradient(40% 40% at 50% 100%,rgba(100,187,92,.10),transparent 70%)}
+h1{max-width:24ch;margin:0 auto 22px;font-size:clamp(32px,5vw,52px);font-weight:700;line-height:1.14;letter-spacing:-.02em;text-wrap:balance}
+h1 .m{color:var(--brand)}
+.authors{margin:0 auto 8px;font-size:21px}
+.venue{margin:4px auto 26px;color:var(--orange);font-size:17px;font-weight:600}
+.links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:0}
+.links a{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border:1px solid #15171A;border-radius:999px;background:#15171A;color:#fff;font-size:14.5px;font-weight:500;line-height:1;box-shadow:0 6px 18px -10px rgba(0,0,0,.5);transition:background .15s,border-color .15s,transform .15s}
+.links a:hover{border-color:var(--brand);background:var(--brand);color:#fff;transform:translateY(-1px)}
+.links a svg{width:16px;height:16px;opacity:.9}
+.links a.off{border-color:var(--line);background:transparent;color:var(--faint);box-shadow:none;pointer-events:none}
+.links a .soon{margin-left:2px;color:var(--faint);font-size:10px;letter-spacing:.02em;opacity:.8}
+.tldr{max-width:78ch;margin:28px auto 0;color:var(--dim);font-size:17px;line-height:1.55;text-wrap:pretty}
+.tldr .k{margin-right:9px;color:var(--faint);font-size:12px;font-weight:500;letter-spacing:.12em}
+.tldr b{color:var(--text);font-weight:600}
+
+/* Media slots */
+.slot{position:relative;overflow:hidden;background:#0E1116}
+.slot video,.slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
+.empty{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:4px;background:var(--surface-2);color:var(--faint);text-align:center}
+.empty b{color:var(--dim);font-size:15px;font-weight:500}
+.empty small{font-size:12px;letter-spacing:.04em}
+
+/* Teaser carousel */
+.carousel{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:16px;box-shadow:0 24px 60px -30px rgba(0,0,0,.4)}
+.carousel .slot{aspect-ratio:16/9}
+.carousel .empty::before{content:"";width:68px;height:68px;margin-bottom:10px;border-radius:50%;background:rgba(21,23,26,.72) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="white" d="M8 5v14l11-7z"/></svg>') center/30px no-repeat}
+.cnav{position:absolute;top:50%;display:grid;place-items:center;width:40px;height:40px;border:1px solid rgba(255,255,255,.3);border-radius:50%;background:rgba(10,12,16,.45);color:#fff;font-size:22px;line-height:1;cursor:pointer;opacity:0;transform:translateY(-50%);transition:opacity .18s,background .18s}
+.carousel:hover .cnav,.cnav:focus-visible{opacity:1}
+.cnav:hover{background:rgba(10,12,16,.75)}
+.cnav.prev{left:12px}.cnav.next{right:12px}
+.thumbs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:14px}
+.thumb{position:relative;width:104px;height:62px;padding:0;overflow:hidden;border:2px solid transparent;border-radius:9px;background:var(--surface-2);cursor:pointer;opacity:.75;transition:opacity .18s,border-color .18s,transform .18s}
+.thumb img{display:block;width:100%;height:100%;object-fit:cover}
+.thumb span{position:absolute;left:0;right:0;bottom:0;padding:10px 4px 3px;overflow:hidden;color:var(--dim);font-size:11px;font-weight:500;text-overflow:ellipsis;white-space:nowrap}
+.thumb img + span{color:#fff;background:linear-gradient(transparent,rgba(0,0,0,.75))}
+.thumb:hover{opacity:1}
+.thumb[aria-pressed="true"]{border-color:var(--brand);opacity:1;transform:translateY(-2px)}
+
+/* Panels */
+.panel{padding:24px;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
+.segwrap{display:flex;justify-content:center}
+.seg{display:inline-flex;flex-wrap:wrap;justify-content:center;margin-bottom:18px;padding:3px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.seg button{padding:8px 16px;border:0;border-radius:7px;background:transparent;color:var(--dim);font-size:13.5px;font-weight:500;cursor:pointer;transition:background .15s,color .15s}
+.seg button:hover{color:var(--text)}
+.seg button[aria-pressed="true"]{background:var(--surface-2);color:var(--text)}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.cell{margin:0}
+.cell .slot{aspect-ratio:16/10;border-radius:10px}
+.cell figcaption{padding:9px 4px 0;color:var(--dim);font-size:13.5px;text-align:center}
+.cell figcaption b{color:var(--text);font-weight:600}
+.player{max-width:880px;margin:0 auto}
+.player .slot{aspect-ratio:16/9;border-radius:10px}
+
+/* Comparison: drag to reveal */
+.reveal{position:relative;max-width:880px;margin:0 auto;overflow:hidden;aspect-ratio:16/9;border:1px solid var(--line);border-radius:12px;--pos:50%;user-select:none}
+.reveal .slot{position:absolute;inset:0}
+.reveal .top{clip-path:inset(0 0 0 var(--pos))}
+.reveal .top .empty{background:#DDE6F7}
+.reveal .base .empty{padding-right:50%}
+.reveal .top .empty{padding-left:50%}
+.rvline{position:absolute;top:0;bottom:0;left:var(--pos);width:2px;margin-left:-1px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.2);pointer-events:none}
+.rvknob{position:absolute;top:50%;left:50%;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:#fff;color:#15171A;font-size:15px;transform:translate(-50%,-50%);box-shadow:0 2px 10px rgba(0,0,0,.35)}
+.rvtag{position:absolute;bottom:10px;padding:5px 9px;border-radius:6px;background:rgba(0,0,0,.6);color:#fff;font-size:12px;font-weight:500;pointer-events:none}
+.rvtag.l{left:10px}.rvtag.r{right:10px}
+.rvrange{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:ew-resize}
+
+/* Tables */
+.tscroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;white-space:nowrap;font-variant-numeric:tabular-nums}
+th,td{padding:9px 8px;text-align:center;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{position:sticky;left:0;text-align:left;background:inherit}
+thead tr,tbody tr{background:var(--bg)}
+tbody tr:nth-child(even){background:#F8F9FA}
+thead th{color:var(--faint);font-size:11.5px;font-weight:500;letter-spacing:.04em;text-transform:uppercase}
+thead tr:first-child th{padding-bottom:2px;border-bottom:0}
+thead th.grp span{display:block;margin:0 10px;padding-bottom:6px;border-bottom:2px solid var(--dim);color:var(--dim)}
+tbody tr:last-child td{border-bottom:0}
+tbody td{color:var(--dim)}
+tbody td:first-child{color:var(--text)}
+tbody tr.ours{background:rgba(10,89,247,.07)}
+tbody tr.ours td{color:var(--text)}
+tbody tr.ours td:first-child{font-weight:600;box-shadow:inset 3px 0 0 var(--brand)}
+td.b{color:var(--text);font-weight:700}
+td.na{color:rgba(0,0,0,.25)}
+
+/* Figures */
+.figbox{padding:20px;border:1px solid var(--line);border-radius:16px;background:var(--surface);text-align:center;box-shadow:0 18px 40px -30px rgba(0,0,0,.3)}
+.figbox img{border-radius:6px}
+.figbox .slot{aspect-ratio:21/8;border-radius:8px}
+.figbox .empty{background:var(--bg)}
+
+pre{margin:0;padding:18px 20px;overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);color:var(--text);font:400 13px/1.6 var(--mono);text-align:left}
+footer{padding:40px 0 70px;border-top:1px solid var(--line);background:var(--surface);color:var(--dim);font-size:14px;text-align:center}
+footer p{margin:0}
+
+@media (max-width:760px){
+  .navpaper{display:none}
+  .wrap{padding:0 16px}
+  section{padding:44px 0}
+  header{padding:56px 0 40px}
+  h2{font-size:27px}
+  .authors{font-size:18px}
+  .prose{font-size:16.5px}
+  .panel{padding:14px}
+  .grid{grid-template-columns:1fr}
+  .thumb{width:76px;height:48px}
+  .thumb span{font-size:10px}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+</style>
+</head>
+
+<body id="top">
+<nav class="top"><div class="wrap">
+  <a class="brand" href="#top">VGGT-MA</a>
+  <div class="navlinks"><a href="#abstract">Abstract</a><a href="#results">Results</a><a href="#multi-agent">Multi-Agent</a><a href="#day-night">Day &amp; Night</a><a href="#comparison">Comparison</a><a href="#benchmarks">Benchmarks</a><a href="#method">Method</a><a href="#bibtex">BibTeX</a></div>
+  <a class="navpaper" data-link="paper" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/></svg>Paper</a>
+</div></nav>
+
+<header><div class="wrap">
+  <h1><span class="m">VGGT-MA</span>: Multi-Robot Dense SLAM with Uncalibrated Heterogeneous Cameras</h1>
+  <p class="authors">Anonymous Authors</p>
+  <p class="venue">Under review</p>
+  <div class="links">
+    <a data-link="paper" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>Paper</a>
+    <a data-link="arxiv" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h10"/></svg>arXiv</a>
+    <a data-link="code" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg>Code</a>
+    <a data-link="video" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9.5v5l4.5-2.5z" fill="currentColor"/></svg>Video</a>
+  </div>
+</div></header>
+
+<section style="padding-top:8px"><div class="wrap">
+  <div class="carousel">
+    <div id="teaser"></div>
+    <button class="cnav prev" id="teaser-prev" type="button" aria-label="Previous">&#8249;</button>
+    <button class="cnav next" id="teaser-next" type="button" aria-label="Next">&#8250;</button>
+  </div>
+  <div class="thumbs" id="teaser-thumbs" role="group" aria-label="Choose a sequence"></div>
+</div></section>
+
+<section id="abstract"><div class="wrap">
+  <h2>Abstract</h2>
+  <p class="lede">Coming soon.</p>
+</div></section>
+
+<section id="results"><div class="wrap">
+  <h2>Results</h2>
+  <p class="lede">Team maps and trajectories reconstructed by VGGT-MA.</p>
+  <div class="panel">
+    <div class="segwrap"><div class="seg" id="results-seg"></div></div>
+    <div class="grid" id="results-grid"></div>
+  </div>
+</div></section>
+
+<section id="multi-agent"><div class="wrap">
+  <h2>Multi-Agent Reconstruction</h2>
+  <div class="panel">
+    <div class="segwrap"><div class="seg" id="agents-seg"></div></div>
+    <div class="player" id="agents-player"></div>
+  </div>
+</div></section>
+
+<section id="day-night"><div class="wrap">
+  <h2>Day &amp; Night</h2>
+  <div class="grid" id="lighting-grid"></div>
+</div></section>
+
+<section id="comparison"><div class="wrap">
+  <h2>Comparison</h2>
+  <p class="lede">Left: baseline. Right: VGGT-MA. Drag the divider to compare.</p>
+  <div class="reveal" id="reveal">
+    <div class="slot base" id="reveal-base"></div>
+    <div class="slot top" id="reveal-top"></div>
+    <div class="rvline"><span class="rvknob">&#8596;</span></div>
+    <span class="rvtag l" id="reveal-l">Baseline</span><span class="rvtag r" id="reveal-r">VGGT-MA</span>
+    <input class="rvrange" id="reveal-range" type="range" min="0" max="100" step="0.1" value="50" aria-label="Divider position">
+  </div>
+</div></section>
+
+<section id="benchmarks"><div class="wrap">
+  <h2>Benchmarks</h2>
+  <p class="lede" id="bench-lede"></p>
+  <div class="tscroll"><table id="bench"></table></div>
+</div></section>
+
+<section id="method"><div class="wrap">
+  <h2>Method</h2>
+  <div class="figbox" id="method-figure"></div>
+  <p class="caption">Overview of VGGT-MA. Each robot builds an SL(4) keyframe graph with a frozen VGGT and sends its graph, place-recognition descriptors and, on request, a few keyframes to the server. The server discovers places observed by two robots, reconstructs the keyframes of both robots that observe such a place in one forward pass and verifies the loop by attention, attaches the loop submap to each robot through constraints between two reconstructions of the same image, which differ by scale and intrinsic ratio, and optimizes the team graph on SL(4). A final photometric refinement estimates a Gaussian map together with keyframe poses and per-keyframe intrinsics.</p>
+</div></section>
+
+<section id="bibtex"><div class="wrap">
+  <h2>BibTeX</h2>
+  <div class="measure"><pre>@article{vggtma2026,
+  title  = {{VGGT-MA}: Multi-Robot Dense {SLAM} with Uncalibrated Heterogeneous Cameras},
+  author = {Anonymous Authors},
+  year   = {2026}
+}</pre></div>
+</div></section>
+
+<footer><div class="wrap">
+  <p>VGGT-MA &middot; Anonymous Authors</p>
+</div></footer>
+
 <script>
-// All video addresses are configured here. Replace URLs with assets/your-video.mp4 later.
-const mediaRoot='https://como3r-slam.github.io/static/';
-const scenes=[
- {name:'Courthouse',file:'courthouse',thumb:'courthouse.jpg'},
- {name:'Barn',file:'barn',thumb:'barn.jpg'},
- {name:'Truck',file:'truck',thumb:'truck.jpg'},
- {name:'Ignatius',file:'ignatius',thumb:'ignatius.jpg'},
- {name:'Caterpillar',file:'caterpillar',thumb:'caterpillar.jpg'},
- {name:'Waymo · 134763',file:'134763',thumb:'134763.png'},
- {name:'Waymo · 153495',file:'153495',thumb:'153495.png'},
- {name:'Waymo · 158686',file:'158686',thumb:'158686.png'}
-];
-let selectedScene=0;
-const hero=document.getElementById('hero-video');
-const sceneButtons=[];
-scenes.forEach((scene,index)=>{
- const b=document.createElement('button');b.className='scene';b.setAttribute('aria-pressed',String(index===0));
- const img=document.createElement('img');img.src=mediaRoot+'thumbs/'+scene.thumb;img.alt='';img.loading='lazy';
- const label=document.createElement('span');label.textContent=scene.name;b.append(img,label);b.addEventListener('click',()=>selectScene(index));sceneButtons.push(b);document.getElementById('scene-tabs').append(b);
+/* Content configuration. Put media under assets/ and fill in src (and an
+   optional poster). An empty src shows a placeholder. Images and videos both work. */
+const LINKS = {paper: '', arxiv: '', code: '', video: ''};
+
+const MEDIA = {
+  teaser: [
+    {name: 'Barn', src: '', poster: ''},
+    {name: 'Caterpillar', src: '', poster: ''},
+    {name: 'Ignatius', src: '', poster: ''},
+    {name: 'Truck', src: '', poster: ''},
+    {name: 'Waymo 158686', src: '', poster: ''},
+    {name: 'Waymo 134763', src: '', poster: ''},
+    {name: 'Waymo 153495', src: '', poster: ''},
+    {name: 'Waymo 106762', src: '', poster: ''}
+  ],
+  results: [
+    {label: 'TNTMultiagent', items: [
+      {name: 'Barn', src: ''}, {name: 'Caterpillar', src: ''}, {name: 'Ignatius', src: ''}, {name: 'Truck', src: ''}]},
+    {label: 'Waymo', items: [
+      {name: '158686', src: ''}, {name: '134763', src: ''}, {name: '153495', src: ''}, {name: '106762', src: ''}]},
+    {label: 'S3E', items: [
+      {name: 'Playground 1', src: ''}, {name: 'Playground 2', src: ''}, {name: 'Library 1', src: ''}, {name: 'Dormitory 1', src: ''}]}
+  ],
+  agents: [
+    {label: '4 agents', name: '4-agent reconstruction', src: '', poster: ''},
+    {label: '3 agents', name: '3-agent reconstruction', src: '', poster: ''}
+  ],
+  dayNight: [
+    {name: 'Day', src: '', poster: ''},
+    {name: 'Night', src: '', poster: ''}
+  ],
+  comparison: {
+    base: {name: 'Baseline', src: ''},
+    top:  {name: 'VGGT-MA', src: ''}
+  },
+  method: {name: 'Method figure', src: ''}
+};
+
+/* Benchmark table. null leaves a cell empty; the lowest value in each column is set in bold. */
+const BENCH = {
+  lede: 'Per-agent ATE (m) on TNTMultiagent and Waymo. Lower is better.',
+  groups: [['TNTMultiagent', 4], ['Waymo', 4]],
+  columns: ['Barn', 'Caterpillar', 'Ignatius', 'Truck', '158686', '134763', '153495', '106762'],
+  rows: [
+    ['CP-SLAM', null, null, null, null, null, null, null, null],
+    ['CCM-SLAM', null, null, null, null, null, null, null, null],
+    ['MAGiC-SLAM', null, null, null, null, null, null, null, null],
+    ['MAC-Ego3D', null, null, null, null, null, null, null, null],
+    ['MNE-SLAM', null, null, null, null, null, null, null, null],
+    ['MultiSlam-DiffPose', null, null, null, null, null, null, null, null],
+    ['MASt3R-SLAM', null, null, null, null, null, null, null, null],
+    ['CoMo3R-SLAM', null, null, null, null, null, null, null, null]
+  ],
+  ours: ['VGGT-MA (ours)', null, null, null, null, null, null, null, null]
+};
+
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
+
+function fill(el, item, autoplay = true) {
+  el.replaceChildren();
+  if (item && item.src) {
+    if (/\.(png|jpe?g|webp|gif|svg|avif)(\?.*)?$/i.test(item.src)) {
+      const img = new Image(); img.src = item.src; img.alt = item.name || ''; img.loading = 'lazy'; el.append(img);
+    } else {
+      const v = document.createElement('video');
+      Object.assign(v, {src: item.src, muted: true, loop: true, playsInline: true, autoplay, preload: 'metadata'});
+      if (item.poster) v.poster = item.poster;
+      el.append(v);
+    }
+  } else {
+    el.insertAdjacentHTML('beforeend', `<div class="empty"><b>${esc(item && item.name)}</b><small>Coming soon</small></div>`);
+  }
+  return el;
+}
+const slot = (item, cls = '') => fill(Object.assign(document.createElement('div'), {className: 'slot' + (cls ? ' ' + cls : '')}), item);
+function cell(item) {
+  const f = document.createElement('figure');
+  f.className = 'cell';
+  f.append(slot(item));
+  f.insertAdjacentHTML('beforeend', `<figcaption><b>${esc(item.name)}</b></figcaption>`);
+  return f;
+}
+function segment(host, groups, onPick) {
+  const buttons = groups.map((g, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.textContent = g.label;
+    b.addEventListener('click', () => pick(i));
+    host.append(b);
+    return b;
+  });
+  function pick(i) { buttons.forEach((b, k) => b.setAttribute('aria-pressed', String(k === i))); onPick(groups[i]); }
+  pick(0);
+}
+
+/* Links: unavailable ones are shown greyed with a quiet "soon". */
+document.querySelectorAll('[data-link]').forEach(a => {
+  const url = LINKS[a.dataset.link];
+  if (url) { a.href = url; a.target = '_blank'; a.rel = 'noopener'; return; }
+  if (a.classList.contains('navpaper')) { a.hidden = true; return; }
+  a.classList.add('off'); a.setAttribute('aria-disabled', 'true');
+  a.insertAdjacentHTML('beforeend', '<span class="soon">soon</span>');
 });
-function selectScene(index){
- selectedScene=(index+scenes.length)%scenes.length;const scene=scenes[selectedScene];hero.pause();hero.src=mediaRoot+'video/'+scene.file+'.mp4';hero.poster=mediaRoot+'thumbs/'+scene.thumb;hero.load();
- document.getElementById('scene-label').textContent=scene.name;document.getElementById('hero-error').hidden=true;document.getElementById('video-fallback').href=hero.src;
- sceneButtons.forEach((b,i)=>b.setAttribute('aria-pressed',String(i===selectedScene)));
-}
-document.getElementById('previous').addEventListener('click',()=>selectScene(selectedScene-1));document.getElementById('next').addEventListener('click',()=>selectScene(selectedScene+1));hero.addEventListener('error',()=>document.getElementById('hero-error').hidden=false);
-function videoCard(name,file,thumb){
- const card=document.createElement('div');card.className='media-card';const frame=document.createElement('div');frame.className='media';const v=document.createElement('video');v.controls=true;v.muted=true;v.loop=true;v.playsInline=true;v.preload='none';if(thumb)v.poster=mediaRoot+'thumbs/'+thumb;v.src=mediaRoot+'video/'+file+'.mp4';
- const error=document.createElement('p');error.className='video-status';error.hidden=true;const link=document.createElement('a');link.href=v.src;link.textContent='Open video ↗';link.target='_blank';link.rel='noopener';error.append('Video unavailable. ',link);v.addEventListener('error',()=>error.hidden=false);
- frame.append(v);const title=document.createElement('h3');title.textContent=name;card.append(frame,title,error);return card;
-}
-[['Barn','barn','barn.jpg'],['Truck','truck','truck.jpg'],['Waymo · 134763','134763','134763.png'],['Waymo · 158686','158686','158686.png']].forEach(x=>document.getElementById('result-grid').append(videoCard(...x)));
-const agents={four:[['Barn · 4 agents','barn_4','barn.jpg'],['Truck · 4 agents','truck_4','truck.jpg']],three:[['Ignatius · 3 agents','ignatius_3','ignatius.jpg'],['Caterpillar · 3 agents','caterpillar_3','caterpillar.jpg']]};
-function setAgents(key){document.querySelectorAll('#agent-grid video').forEach(v=>v.pause());document.getElementById('agent-grid').replaceChildren(...agents[key].map(x=>videoCard(...x)));document.querySelectorAll('[data-agent]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.agent===key)));}
-document.querySelectorAll('[data-agent]').forEach(b=>b.addEventListener('click',()=>setAgents(b.dataset.agent)));setAgents('four');
-[['Day','day',null],['Night','dark',null]].forEach(x=>document.getElementById('lighting-grid').append(videoCard(...x)));
-// Avoid many simultaneous video streams when browsing the grid.
-document.addEventListener('play',event=>{if(event.target.tagName==='VIDEO')document.querySelectorAll('video').forEach(v=>{if(v!==event.target)v.pause();});},true);
+
+/* Teaser */
+(function () {
+  const list = MEDIA.teaser, stage = document.getElementById('teaser'), host = document.getElementById('teaser-thumbs');
+  let cur = 0;
+  stage.className = 'slot';
+  const thumbs = list.map((it, i) => {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'thumb'; b.title = it.name; b.setAttribute('aria-label', it.name);
+    b.innerHTML = (it.poster ? `<img src="${esc(it.poster)}" alt="" loading="lazy">` : '') + `<span>${esc(it.name)}</span>`;
+    b.addEventListener('click', () => show(i));
+    host.append(b);
+    return b;
+  });
+  function show(i) {
+    cur = (i + list.length) % list.length;
+    fill(stage, list[cur]);
+    thumbs.forEach((b, k) => b.setAttribute('aria-pressed', String(k === cur)));
+  }
+  document.getElementById('teaser-prev').addEventListener('click', () => show(cur - 1));
+  document.getElementById('teaser-next').addEventListener('click', () => show(cur + 1));
+  show(0);
+})();
+
+/* Results, multi-agent, day and night */
+segment(document.getElementById('results-seg'), MEDIA.results, g => document.getElementById('results-grid').replaceChildren(...g.items.map(cell)));
+segment(document.getElementById('agents-seg'), MEDIA.agents, g => document.getElementById('agents-player').replaceChildren(slot(g)));
+MEDIA.dayNight.forEach(it => document.getElementById('lighting-grid').append(cell(it)));
+
+/* Comparison */
+(function () {
+  const c = MEDIA.comparison, box = document.getElementById('reveal'), range = document.getElementById('reveal-range');
+  fill(document.getElementById('reveal-base'), c.base);
+  fill(document.getElementById('reveal-top'), c.top);
+  document.getElementById('reveal-l').textContent = c.base.name;
+  document.getElementById('reveal-r').textContent = c.top.name;
+  const update = () => box.style.setProperty('--pos', range.value + '%');
+  range.addEventListener('input', update); update();
+})();
+
+/* Benchmarks */
+(function () {
+  const all = [...BENCH.rows, BENCH.ours];
+  const best = BENCH.columns.map((_, j) => {
+    const v = all.map(r => r[j + 1]).filter(x => typeof x === 'number');
+    return v.length ? Math.min(...v) : null;
+  });
+  const td = (v, j) => v == null ? '<td class="na">&ndash;</td>' : `<td${v === best[j] ? ' class="b"' : ''}>${esc(v)}</td>`;
+  const tr = (r, ours) => `<tr${ours ? ' class="ours"' : ''}><td>${esc(r[0])}</td>${r.slice(1).map(td).join('')}</tr>`;
+  document.getElementById('bench').innerHTML =
+    '<thead><tr><th></th>' + BENCH.groups.map(([g, n]) => `<th class="grp" colspan="${n}"><span>${esc(g)}</span></th>`).join('') + '</tr>' +
+    '<tr><th>Method</th>' + BENCH.columns.map(c => `<th>${esc(c)}</th>`).join('') + '</tr></thead>' +
+    '<tbody>' + BENCH.rows.map(r => tr(r, false)).join('') + tr(BENCH.ours, true) + '</tbody>';
+  document.getElementById('bench-lede').textContent = BENCH.lede;
+})();
+
+/* Method figure */
+document.getElementById('method-figure').append(slot(MEDIA.method));
 </script>
-</body></html>
+</body>
+</html>
