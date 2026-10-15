@@ -13,10 +13,10 @@
   --ink:#1A1A1A;
   --line:#E6E8EC;
   --band:#F5F5F5;
-  --accent:#7068F2;
-  --accent-grad:linear-gradient(100deg,#5A92F5 0%,#7A70F2 55%,#9C62EC 100%);
+  --accent:#8A86F4;
+  --accent-grad:linear-gradient(100deg,#7AA8F7 0%,#958CF5 55%,#B285F0 100%);
   --accent-tint:#F3F1FE;
-  --bp1:#4C8DF6; --bp2:#6878F4; --bp3:#8566F0; --bp4:#A05CEB;
+  --bp1:#6FA3F8; --bp2:#8A92F6; --bp3:#A186F3; --bp4:#B67DEE;
   --grad3:linear-gradient(100deg,var(--bp1) 0%,var(--bp2) 38%,var(--bp3) 68%,var(--bp4) 100%);
   --head:"Google Sans","Noto Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --body:"Noto Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -68,10 +68,10 @@ button{font:inherit;color:inherit}
 .chips{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem 1.6rem;margin-bottom:1.1rem}
 .chip-group{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.4rem}
 .chip-title{margin-right:.25rem;font-family:var(--head);font-size:.72rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
-.chip{padding:.34rem 1rem;border:1px solid #D5D8DD;border-radius:999px;background:#fff;font-family:var(--head);font-size:.88rem;cursor:pointer;transition:all .2s ease}
+.chip{padding:.34rem 1rem;border:1px solid #D5D8DD;border-radius:8px;background:#fff;font-family:var(--head);font-size:.88rem;cursor:pointer;transition:all .2s ease}
 .chip:active{transform:scale(.97)}
 .chip:hover{border-color:var(--accent);color:var(--accent)}
-.chip[aria-pressed="true"]{border-color:transparent;background:var(--accent-grad);color:#fff;box-shadow:0 6px 14px -8px rgba(112,104,242,.7)}
+.chip[aria-pressed="true"]{border-color:transparent;background:var(--accent-grad);color:#fff;box-shadow:0 6px 14px -8px rgba(138,134,244,.7)}
 
 /* Stage: a large player with its own controls */
 .stage{position:relative;overflow:hidden;aspect-ratio:16/9;border:1px solid var(--card-line);border-radius:var(--r-lg);background:radial-gradient(120% 120% at 50% 0%,#FFFFFF 0%,#FAFBFE 70%,#F3F6FC 100%);box-shadow:var(--card-shadow)}
@@ -131,7 +131,7 @@ th:first-child,td:first-child{text-align:left}
 thead th{font-family:var(--head);font-weight:700;border-bottom:2px solid #DBDBDB}
 thead tr:first-child th{border-bottom:1px solid #DBDBDB}
 th.grp,td.grp{border-left:1px solid #DBDBDB}
-tbody tr.ours td{background:#EDEAFE;font-weight:700}
+tbody tr.ours td{background:#F2F0FE;font-weight:700}
 tbody tr.ours td:first-child span{background:var(--grad3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 td.b{font-weight:700}
 .table-note{margin-top:.85rem;font-size:.85rem;line-height:1.6;text-align:left}
@@ -612,7 +612,7 @@ MEDIA.dayNight.forEach(it => document.getElementById('lighting-grid').append(til
 (function () {
   const nav = document.getElementById('pnav'), fillBar = document.getElementById('pnav-fill');
   const secs = [...document.querySelectorAll('[data-nav]')];
-  const stops = [[76, 141, 246], [104, 120, 244], [160, 92, 235]];
+  const stops = [[111, 163, 248], [138, 146, 246], [182, 125, 238]];
   const mix = t => { const k = Math.min(1, Math.floor(t * 2)), u = t * 2 - k, a = stops[k], b = stops[k + 1]; return `rgb(${a.map((x, i) => Math.round(x + (b[i] - x) * u)).join(',')})`; };
   const links = secs.map((s, i) => {
     const a = document.createElement('a');
