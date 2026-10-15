@@ -28,8 +28,8 @@
   --mono:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
 }
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;overflow-x:hidden}
-body{margin:0;overflow-x:hidden;background:#F7FAFF linear-gradient(180deg,#FFFFFF 0,#F7FAFF 640px) no-repeat;color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.6;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth;scroll-padding-top:72px;overflow-x:hidden}
+body{margin:0;overflow-x:hidden;background:#FFFFFF;color:var(--ink);font-family:var(--body);font-size:1rem;line-height:1.6;-webkit-font-smoothing:antialiased}
 h1,h2,h3,p,figure{margin:0}
 img,video{display:block;max-width:100%}
 a{color:inherit}
@@ -41,14 +41,14 @@ button{font:inherit;color:inherit}
 .column{width:100%}
 
 /* Header */
-.hero{padding:4.5rem 0 2.25rem;text-align:center}
-.title{max-width:60rem;margin:0 auto;font-family:var(--head);font-size:clamp(1.75rem,4vw,3rem);font-weight:500;line-height:1.2;letter-spacing:-.01em;text-wrap:balance}
+.hero{padding:5.5rem 0 2.5rem;text-align:center}
+.title{max-width:62rem;margin:0 auto;font-family:var(--head);font-size:clamp(2rem,4.6vw,3.5rem);font-weight:500;line-height:1.14;letter-spacing:-.022em;text-wrap:balance}
 .wordmark{font-weight:700;background:var(--grad3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 .authors{margin-top:1.9rem;font-family:var(--head);font-size:1.25rem}
 .venue{margin-top:1.2rem;font-family:var(--head);font-size:1.1rem;font-weight:700}
 .links{display:flex;flex-wrap:wrap;justify-content:center;gap:.8rem;margin-top:2rem}
 
-.btn{--glow:rgba(0,0,0,.4);position:relative;display:inline-flex;align-items:center;gap:.5em;height:2.9rem;padding-inline:1.35rem;border:0;border-radius:2.5rem;background:#363636;color:#fff;font-family:var(--head);font-size:1.15rem;font-weight:500;white-space:nowrap;text-decoration:none;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.08);transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
+.btn{--glow:rgba(0,0,0,.4);position:relative;display:inline-flex;align-items:center;gap:.5em;height:2.9rem;padding-inline:1.35rem;border:0;border-radius:10px;background:#363636;color:#fff;font-family:var(--head);font-size:1.15rem;font-weight:500;white-space:nowrap;text-decoration:none;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.08);transition:transform .2s ease,box-shadow .2s ease,background .2s ease}
 .btn svg{width:18px;height:18px;flex:none;fill:currentColor;transition:transform .2s ease}
 .btn:hover{transform:translateY(-2px);box-shadow:0 12px 22px -10px var(--glow),0 2px 4px rgba(0,0,0,.06)}
 .btn:hover svg{transform:scale(1.12)}
@@ -90,7 +90,7 @@ button{font:inherit;color:inherit}
 .stage .empty{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:.15rem;text-align:center}
 .empty b{font-family:var(--head);font-size:1.05rem;font-weight:700}
 .empty small{font-size:.8rem}
-.caption{margin-top:.85rem;font-size:.9rem;line-height:1.6;text-align:left}
+.caption{margin-top:.85rem;font-size:.9rem;line-height:1.6;font-variant-numeric:tabular-nums;text-align:left}
 
 /* Sections */
 .section{padding:2.5rem 0}
@@ -165,6 +165,35 @@ footer{padding:2.5rem 0 3rem;border-top:1px solid rgba(60,40,170,.08);font-size:
 .pnav a:hover b{transform:scale(1.45)}
 .pnav a.on span{opacity:1;transform:none;font-weight:700}
 .pnav.active a span{opacity:1;transform:none;pointer-events:auto}
+/* Top bar that appears once the header has scrolled away */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:40;background:rgba(255,255,255,.85);-webkit-backdrop-filter:saturate(180%) blur(14px);backdrop-filter:saturate(180%) blur(14px);border-bottom:1px solid rgba(30,50,120,.08);transform:translateY(-100%);transition:transform .3s ease}
+.topbar.show{transform:none}
+.topbar .container{display:flex;align-items:center;gap:1.5rem;height:56px}
+.topbar .brand{flex:none;font-family:var(--head);font-size:1.15rem;font-weight:700;text-decoration:none;background:var(--grad3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.topbar nav{display:flex;gap:.2rem;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.topbar nav::-webkit-scrollbar{display:none}
+.topbar nav a{padding:.35rem .7rem;border-radius:999px;font-family:var(--head);font-size:.9rem;text-decoration:none;white-space:nowrap;transition:background .2s ease}
+.topbar nav a:hover{background:rgba(112,104,242,.08)}
+.topbar nav a.on{background:rgba(112,104,242,.12);font-weight:700}
+.topbar .btn{height:2.2rem;padding-inline:1rem;font-size:.95rem}
+@media (max-width:860px){.topbar nav{display:none}.topbar .btn{margin-left:auto}}
+
+/* Key numbers under the teaser */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:2rem;border:1px solid var(--card-line);border-radius:var(--r-lg);background:#fff;box-shadow:var(--card-shadow)}
+.stat{padding:1.4rem 1.2rem;text-align:center}
+.stat + .stat{border-left:1px solid var(--card-line)}
+.stat b{display:block;font-family:var(--head);font-size:2.4rem;font-weight:700;line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;background:var(--grad3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.stat span{display:block;margin-top:.35rem;font-size:.88rem}
+@media (max-width:700px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat:nth-child(3){border-left:0}.stat:nth-child(n+3){border-top:1px solid var(--card-line)}}
+
+/* Player chrome stays out of the way until the pointer is over the stage */
+@media (hover:hover){
+  .stage .stage-bar,.stage .stage-badge{opacity:0;transition:opacity .25s ease}
+  .stage:hover .stage-bar,.stage:hover .stage-badge,.stage:focus-within .stage-bar,.stage:focus-within .stage-badge{opacity:1}
+}
+.fig-no{font-weight:700}
+
+footer .meta{margin-top:.35rem;font-size:.82rem}
 @keyframes fadein{from{opacity:0}to{opacity:1}}
 .stage>video,.stage>img,.stage>.empty,.tile>video,.tile>img,.tile>.empty{animation:fadein .4s ease}
 @media (max-width:860px){.gallery{grid-template-columns:repeat(2,minmax(0,1fr))}}
@@ -180,8 +209,9 @@ footer{padding:2.5rem 0 3rem;border-top:1px solid rgba(60,40,170,.08);font-size:
 </head>
 
 <body>
+<div class="topbar" id="topbar"><div class="container"><a class="brand" href="#top">VGGT-MA</a><nav id="topnav"></nav><a class="btn btn-paper" data-link="paper" href="#">Paper</a></div></div>
 <nav class="pnav" id="pnav" aria-label="Sections"><span class="pnav-track"><span class="pnav-fill" id="pnav-fill"></span></span></nav>
-<header class="hero"><div class="container">
+<header class="hero" id="top"><div class="container">
   <h1 class="title"><span class="wordmark">VGGT-MA</span>: Multi-Robot Dense SLAM with Uncalibrated Heterogeneous Cameras</h1>
   <p class="authors">Anonymous Authors</p>
   <p class="venue">Under review</p>
@@ -197,6 +227,7 @@ footer{padding:2.5rem 0 3rem;border-top:1px solid rgba(60,40,170,.08);font-size:
   <div class="chips" id="teaser-chips"></div>
   <div class="stage" id="teaser-stage"></div>
   <p class="caption" id="teaser-caption"></p>
+  <div class="stats" id="stats"></div>
 </div></section>
 
 <section class="section band" id="abstract" data-nav="Abstract"><div class="container"><div class="column">
@@ -242,7 +273,7 @@ footer{padding:2.5rem 0 3rem;border-top:1px solid rgba(60,40,170,.08);font-size:
 <section class="section band" id="method" data-nav="Method"><div class="container"><div class="column">
   <h2>Method</h2>
   <div class="figure"><div class="slot" id="method-figure"></div></div>
-  <p class="figure-caption">System overview. Independent monocular front-ends use the MASt3R prior for pointmap matching, tracking, and local fusion. The coordinator retrieves and geometrically verifies cross-agent keyframes, synchronizes their map components, and refines a shared similarity graph. Terminal refinement alternates global poses and geometry-aware segment depths.</p>
+  <p class="figure-caption"><span class="fig-no">Figure 2.</span> System overview. Independent monocular front-ends use the MASt3R prior for pointmap matching, tracking, and local fusion. The coordinator retrieves and geometrically verifies cross-agent keyframes, synchronizes their map components, and refines a shared similarity graph. Terminal refinement alternates global poses and geometry-aware segment depths.</p>
 </div></div></section>
 
 <section class="section" id="bibtex" data-nav="BibTeX"><div class="container"><div class="column">
@@ -254,12 +285,20 @@ footer{padding:2.5rem 0 3rem;border-top:1px solid rgba(60,40,170,.08);font-size:
 }</pre>
 </div></div></section>
 
-<footer><div class="container">&copy; 2026 The VGGT-MA authors</div></footer>
+<footer><div class="container">&copy; 2026 The VGGT-MA authors<p class="meta">Page layout adapted from the Nerfies and PointZero project pages. Last updated October 2026.</p></div></footer>
 
 <script>
 /* Content configuration. Put media under assets/ and fill in src (and an
    optional poster). An empty src shows a placeholder. Images and videos both work. */
 const LINKS = {paper: '', arxiv: '', code: '', video: ''};
+
+/* Key numbers shown under the teaser. Use '–' until a value is final. */
+const STATS = [
+  {value: '3', label: 'Benchmark datasets'},
+  {value: '12', label: 'Evaluation sequences'},
+  {value: '–', label: 'Robots per team'},
+  {value: '–', label: 'Lowest ATE'}
+];
 
 /* Placeholder media from the CoMo3R-SLAM project page until our own clips are ready. */
 const MEDIA = {
@@ -529,7 +568,7 @@ document.querySelectorAll('[data-link]').forEach(a => {
   const full = {TNT: 'TNTMultiagent', Waymo: 'Waymo'};
   chips(document.getElementById('teaser-chips'), Object.entries(groups).map(([g, items]) => ({title: full[g] || g, items})), ({it}) => {
     stage(document.getElementById('teaser-stage'), it, it.name);
-    document.getElementById('teaser-caption').textContent = `${full[it.group] || it.group}, ${it.name}`;
+    document.getElementById('teaser-caption').innerHTML = `<span class="fig-no">Figure 1.</span> ${esc(full[it.group] || it.group)}, ${esc(it.name)}.`;
   }, true);
 })();
 
@@ -564,7 +603,7 @@ MEDIA.dayNight.forEach(it => document.getElementById('lighting-grid').append(til
     '<thead><tr><th></th>' + BENCH.groups.map(([g, n]) => `<th class="grp" colspan="${n}">${esc(g)}</th>`).join('') + '</tr>' +
     '<tr><th>Method</th>' + BENCH.columns.map((c, j) => `<th${starts.has(j) ? ' class="grp"' : ''}>${esc(c)}</th>`).join('') + '</tr></thead>' +
     '<tbody>' + BENCH.rows.map(r => tr(r, false)).join('') + tr(BENCH.ours, true) + '</tbody>';
-  document.getElementById('bench-note').textContent = BENCH.sub;
+  document.getElementById('bench-note').innerHTML = `<span class="fig-no">Table 1.</span> ${esc(BENCH.sub)}`;
 })();
 
 /* Method figure */
@@ -597,6 +636,23 @@ MEDIA.dayNight.forEach(it => document.getElementById('lighting-grid').append(til
   window.addEventListener('scroll', () => { update(); nav.classList.add('active'); clearTimeout(idle); idle = setTimeout(() => nav.classList.remove('active'), 1200); }, {passive: true});
   window.addEventListener('resize', update);
   update();
+})();
+
+/* Key numbers */
+document.getElementById('stats').innerHTML = STATS.map(s => `<div class="stat"><b>${esc(s.value)}</b><span>${esc(s.label)}</span></div>`).join('');
+
+/* Top bar: appears after the header, mirrors the section in view */
+(function () {
+  const bar = document.getElementById('topbar'), nav = document.getElementById('topnav'), hero = document.querySelector('.hero');
+  const secs = [...document.querySelectorAll('[data-nav]')].filter(s => s.id !== 'overview');
+  const links = secs.map(s => { const a = document.createElement('a'); a.href = '#' + s.id; a.innerHTML = s.dataset.nav; nav.append(a); return a; });
+  function update() {
+    bar.classList.toggle('show', hero.getBoundingClientRect().bottom < 0);
+    const y = window.innerHeight * .4; let cur = -1;
+    secs.forEach((s, i) => { if (s.getBoundingClientRect().top <= y) cur = i; });
+    links.forEach((a, i) => a.classList.toggle('on', i === cur));
+  }
+  window.addEventListener('scroll', update, {passive: true}); update();
 })();
 
 </script>
