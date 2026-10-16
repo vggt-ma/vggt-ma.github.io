@@ -39,6 +39,7 @@ button{font:inherit;color:inherit}
 
 .container{width:100%;max-width:1100px;margin-inline:auto;padding-inline:1.5rem}
 .column{width:100%}
+.container.narrow{max-width:820px}
 
 /* Header */
 .hero{padding:5.5rem 0 2.5rem;text-align:center}
@@ -69,9 +70,8 @@ button{font:inherit;color:inherit}
 .chip-group{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:.6rem}
 .chip-title{margin-right:.4rem;font-family:var(--head);font-size:.82rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase}
 .chip{padding:.55rem 1.25rem;border:1px solid #D5D8DD;border-radius:8px;background:#fff;font-family:var(--head);font-size:1.02rem;cursor:pointer;transition:all .2s ease}
-.chip:active{transform:scale(.97)}
 .chip:hover{border-color:rgba(124,118,240,.5);color:#5A55D6}
-.chip[aria-pressed="true"]{border-color:rgba(124,118,240,.38);background:linear-gradient(100deg,#EEF3FF 0%,#F2EFFF 100%);color:#5A55D6;font-weight:500;box-shadow:0 4px 12px -8px rgba(124,118,240,.45)}
+.chip[aria-pressed="true"]{border-color:rgba(124,118,240,.38);background:linear-gradient(100deg,#EEF3FF 0%,#F2EFFF 100%);color:#5A55D6;box-shadow:0 4px 12px -8px rgba(124,118,240,.45)}
 
 /* Stage: a large player with its own controls */
 .stage{position:relative;overflow:hidden;aspect-ratio:16/9;border:1px solid var(--card-line);border-radius:var(--r-lg);background:radial-gradient(120% 120% at 50% 0%,#FFFFFF 0%,#FAFBFE 70%,#F3F6FC 100%);box-shadow:var(--card-shadow)}
@@ -230,11 +230,6 @@ footer .meta{margin-top:.35rem;font-size:.82rem}
   <div class="stats" id="stats"></div>
 </div></section>
 
-<section class="section band" id="abstract" data-nav="Abstract"><div class="container"><div class="column">
-  <h2>Abstract</h2>
-  <!-- Placeholder abstract (CoMo3R-SLAM, arXiv:2605.30488) until ours is released. -->
-  <p class="text">Outdoor robot teams need a shared dense map despite limited overlap, independent reference frames, and uncertain monocular scale. Collaborative dense SLAM systems typically resolve this with depth sensors, which add payload, power, and calibration cost. We present CoMo3R-SLAM, a collaborative monocular dense SLAM system that places learned feed-forward 3D reconstruction priors at the center of the multi-agent problem: their dense pointmaps anchor scale across agents and supply correspondences strong enough to verify inter-agent links geometrically. Each agent tracks and fuses its own keyframes from a single RGB stream, while a coordinator retrieves cross-agent keyframes over the prior's encoder features, verifies them by bidirectional dense pointmap matching, synchronizes the independent similarity gauges in closed form, and refines every keyframe in one unified multi-agent sim(3) graph. Finally, a pose-depth alternation over geometry-aware segments lets inter-agent observations constrain dense structure as well as trajectories. Requiring neither measured depth nor supplied intrinsics, CoMo3R-SLAM attains the lowest trajectory error on three of four Tanks and Temples scenes, and competitive accuracy on Waymo driving sequences, while running at approximately 6-8 FPS on RTX 3080 Ti. A long-horizon traversal, independently captured day and night streams, and teams of up to four agents further map its operating range.</p>
-</div></div></section>
 
 <section class="section" id="results" data-nav="Results"><div class="container">
   <h2>Results</h2>
@@ -270,13 +265,8 @@ footer .meta{margin-top:.35rem;font-size:.82rem}
   <p class="table-note" id="bench-note"></p>
 </div></div></section>
 
-<section class="section band" id="method" data-nav="Method"><div class="container"><div class="column">
-  <h2>Method</h2>
-  <div class="figure"><div class="slot" id="method-figure"></div></div>
-  <p class="figure-caption"><span class="fig-no">Figure 2.</span> System overview. Independent monocular front-ends use the MASt3R prior for pointmap matching, tracking, and local fusion. The coordinator retrieves and geometrically verifies cross-agent keyframes, synchronizes their map components, and refines a shared similarity graph. Terminal refinement alternates global poses and geometry-aware segment depths.</p>
-</div></div></section>
 
-<section class="section" id="bibtex" data-nav="BibTeX"><div class="container"><div class="column">
+<section class="section" id="bibtex" data-nav="BibTeX"><div class="container narrow"><div class="column">
   <h2>BibTeX</h2>
 <pre id="bib">@article{vggtma2026,
   title  = {{VGGT-MA}: Multi-Robot Dense {SLAM} with Uncalibrated Heterogeneous Cameras},
@@ -285,7 +275,7 @@ footer .meta{margin-top:.35rem;font-size:.82rem}
 }</pre>
 </div></div></section>
 
-<footer><div class="container">&copy; 2026 The VGGT-MA authors<p class="meta">Page layout adapted from the Nerfies and PointZero project pages. Last updated October 2026.</p></div></footer>
+<footer><div class="container narrow">&copy; 2026 The VGGT-MA authors<p class="meta">Page layout adapted from the Nerfies and PointZero project pages. Last updated October 2026.</p></div></footer>
 
 <script>
 /* Content configuration. Put media under assets/ and fill in src (and an
@@ -461,10 +451,6 @@ const MEDIA = {
       "src": "https://como3r-slam.github.io/static/video/barn_4.mp4",
       "poster": "https://como3r-slam.github.io/static/thumbs/barn.jpg"
     }
-  },
-  "method": {
-    "name": "Method figure",
-    "src": "https://arxiv.org/html/2605.30488v2/method.png"
   }
 };
 
@@ -606,8 +592,6 @@ MEDIA.dayNight.forEach(it => document.getElementById('lighting-grid').append(til
   document.getElementById('bench-note').innerHTML = `<span class="fig-no">Table 1.</span> ${esc(BENCH.sub)}`;
 })();
 
-/* Method figure */
-(function () { const host = document.getElementById('method-figure'); const m = media(MEDIA.method); host.classList.toggle('blank', !m); host.append(m || empty(MEDIA.method.name)); })();
 /* Reading position rail */
 (function () {
   const nav = document.getElementById('pnav'), fillBar = document.getElementById('pnav-fill');
