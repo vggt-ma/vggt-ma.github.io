@@ -243,10 +243,7 @@ footer .meta{margin-top:.35rem;font-size:.82rem}
   <div class="stage" id="agents-stage"></div>
 </div></div></section>
 
-<section class="section" id="day-night" data-nav="Day &amp; Night"><div class="container"><div class="column">
-  <h2>Day &amp; Night</h2>
-  <div class="gallery two" id="lighting-grid"></div>
-</div></div></section>
+
 
 <section class="section band" id="comparison" data-nav="Comparison"><div class="container"><div class="column">
   <h2>Comparison</h2>
@@ -254,7 +251,7 @@ footer .meta{margin-top:.35rem;font-size:.82rem}
     <div class="layer base" id="reveal-base"></div>
     <div class="layer top" id="reveal-top"></div>
     <div class="rvline"><span class="rvknob"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg></span></div>
-    <span class="rvtag l" id="reveal-l">Baseline</span><span class="rvtag r" id="reveal-r">VGGT-MA</span>
+    <span class="rvtag l" id="reveal-l">CoMo3R-SLAM</span><span class="rvtag r" id="reveal-r">VGGT-MA</span>
     <input class="rvrange" id="reveal-range" type="range" min="0" max="100" step="0.1" value="50" aria-label="Divider position">
   </div>
 </div></div></section>
@@ -282,89 +279,170 @@ footer .meta{margin-top:.35rem;font-size:.82rem}
    optional poster). An empty src shows a placeholder. Images and videos both work. */
 const LINKS = {paper: '', arxiv: '', code: '', video: ''};
 
-/* Key numbers shown under the teaser. Use '–' until a value is final. */
+/* Key numbers shown under the teaser. */
 const STATS = [
-  {value: '3', label: 'Benchmark datasets'},
-  {value: '12', label: 'Evaluation sequences'},
-  {value: '–', label: 'Robots per team'},
-  {value: '–', label: 'Lowest ATE'}
+  {value: '4', label: 'Datasets'},
+  {value: '25', label: 'Scenes'},
+  {value: '2–4', label: 'Robots per team'},
+  {value: '13 GB', label: 'GPU memory for up to four robots'}
 ];
 
-/* Placeholder media from the CoMo3R-SLAM project page until our own clips are ready. */
+/* Our own results; an empty src shows a placeholder until the clip is rendered. */
 const MEDIA = {
   "teaser": [
     {
       "name": "Barn",
-      "src": "https://como3r-slam.github.io/static/video/barn.mp4",
-      "poster": "https://como3r-slam.github.io/static/thumbs/barn.jpg",
-      "group": "TNT"
+      "src": "assets/video/barn.mp4",
+      "poster": "assets/thumb/barn.jpg",
+      "group": "TNTMultiagent"
     },
     {
       "name": "Caterpillar",
-      "src": "https://como3r-slam.github.io/static/video/caterpillar.mp4",
-      "poster": "https://como3r-slam.github.io/static/thumbs/caterpillar.jpg",
-      "group": "TNT"
+      "src": "assets/video/caterpillar.mp4",
+      "poster": "assets/thumb/caterpillar.jpg",
+      "group": "TNTMultiagent"
     },
     {
       "name": "Ignatius",
-      "src": "https://como3r-slam.github.io/static/video/ignatius.mp4",
-      "poster": "https://como3r-slam.github.io/static/thumbs/ignatius.jpg",
-      "group": "TNT"
+      "src": "assets/video/ignatius.mp4",
+      "poster": "assets/thumb/ignatius.jpg",
+      "group": "TNTMultiagent"
     },
     {
       "name": "Truck",
-      "src": "https://como3r-slam.github.io/static/video/truck.mp4",
-      "poster": "https://como3r-slam.github.io/static/thumbs/truck.jpg",
-      "group": "TNT"
+      "src": "assets/video/truck.mp4",
+      "poster": "assets/thumb/truck.jpg",
+      "group": "TNTMultiagent"
     },
     {
       "name": "158686",
-      "src": "https://como3r-slam.github.io/static/video/158686.mp4",
-      "poster": "https://como3r-slam.github.io/static/thumbs/158686.png",
+      "src": "assets/video/waymo_158686.mp4",
+      "poster": "assets/thumb/waymo_158686.jpg",
       "group": "Waymo"
     },
     {
       "name": "134763",
-      "src": "https://como3r-slam.github.io/static/video/134763.mp4",
-      "poster": "https://como3r-slam.github.io/static/thumbs/134763.png",
+      "src": "assets/video/waymo_134763.mp4",
+      "poster": "assets/thumb/waymo_134763.jpg",
       "group": "Waymo"
     },
     {
       "name": "153495",
-      "src": "https://como3r-slam.github.io/static/video/153495.mp4",
-      "poster": "https://como3r-slam.github.io/static/thumbs/153495.png",
+      "src": "assets/video/waymo_153495.mp4",
+      "poster": "assets/thumb/waymo_153495.jpg",
       "group": "Waymo"
     },
     {
-      "group": "Waymo",
       "name": "106762",
-      "src": "",
-      "poster": ""
+      "src": "assets/video/waymo_106762.mp4",
+      "poster": "assets/thumb/waymo_106762.jpg",
+      "group": "Waymo"
     }
   ],
   "results": [
+    {
+      "label": "Tanks and Temples intermediate",
+      "items": [
+        {
+          "name": "Family",
+          "src": "assets/video/family.mp4",
+          "poster": "assets/thumb/family.jpg"
+        },
+        {
+          "name": "Horse",
+          "src": "assets/video/horse.mp4",
+          "poster": "assets/thumb/horse.jpg"
+        },
+        {
+          "name": "M60",
+          "src": "assets/video/m60.mp4",
+          "poster": "assets/thumb/m60.jpg"
+        },
+        {
+          "name": "Francis",
+          "src": ""
+        },
+        {
+          "name": "Lighthouse",
+          "src": ""
+        },
+        {
+          "name": "Panther",
+          "src": ""
+        },
+        {
+          "name": "Playground",
+          "src": ""
+        },
+        {
+          "name": "Train",
+          "src": ""
+        }
+      ]
+    },
+    {
+      "label": "Mip-NeRF 360",
+      "items": [
+        {
+          "name": "bicycle",
+          "src": ""
+        },
+        {
+          "name": "garden",
+          "src": ""
+        },
+        {
+          "name": "stump",
+          "src": ""
+        },
+        {
+          "name": "flowers",
+          "src": ""
+        },
+        {
+          "name": "treehill",
+          "src": ""
+        },
+        {
+          "name": "room",
+          "src": ""
+        },
+        {
+          "name": "counter",
+          "src": ""
+        },
+        {
+          "name": "kitchen",
+          "src": ""
+        },
+        {
+          "name": "bonsai",
+          "src": ""
+        }
+      ]
+    },
     {
       "label": "TNTMultiagent",
       "items": [
         {
           "name": "Barn",
-          "src": "https://como3r-slam.github.io/static/video/barn.mp4",
-          "poster": "https://como3r-slam.github.io/static/thumbs/barn.jpg"
+          "src": "assets/video/barn.mp4",
+          "poster": "assets/thumb/barn.jpg"
         },
         {
           "name": "Caterpillar",
-          "src": "https://como3r-slam.github.io/static/video/caterpillar.mp4",
-          "poster": "https://como3r-slam.github.io/static/thumbs/caterpillar.jpg"
+          "src": "assets/video/caterpillar.mp4",
+          "poster": "assets/thumb/caterpillar.jpg"
         },
         {
           "name": "Ignatius",
-          "src": "https://como3r-slam.github.io/static/video/ignatius.mp4",
-          "poster": "https://como3r-slam.github.io/static/thumbs/ignatius.jpg"
+          "src": "assets/video/ignatius.mp4",
+          "poster": "assets/thumb/ignatius.jpg"
         },
         {
           "name": "Truck",
-          "src": "https://como3r-slam.github.io/static/video/truck.mp4",
-          "poster": "https://como3r-slam.github.io/static/thumbs/truck.jpg"
+          "src": "assets/video/truck.mp4",
+          "poster": "assets/thumb/truck.jpg"
         }
       ]
     },
@@ -373,103 +451,75 @@ const MEDIA = {
       "items": [
         {
           "name": "158686",
-          "src": "https://como3r-slam.github.io/static/video/158686.mp4",
-          "poster": "https://como3r-slam.github.io/static/thumbs/158686.png"
+          "src": "assets/video/waymo_158686.mp4",
+          "poster": "assets/thumb/waymo_158686.jpg"
         },
         {
           "name": "134763",
-          "src": "https://como3r-slam.github.io/static/video/134763.mp4",
-          "poster": "https://como3r-slam.github.io/static/thumbs/134763.png"
+          "src": "assets/video/waymo_134763.mp4",
+          "poster": "assets/thumb/waymo_134763.jpg"
         },
         {
           "name": "153495",
-          "src": "https://como3r-slam.github.io/static/video/153495.mp4",
-          "poster": "https://como3r-slam.github.io/static/thumbs/153495.png"
+          "src": "assets/video/waymo_153495.mp4",
+          "poster": "assets/thumb/waymo_153495.jpg"
         },
         {
           "name": "106762",
-          "src": ""
-        }
-      ]
-    },
-    {
-      "label": "S3E",
-      "items": [
-        {
-          "name": "Playground 1",
-          "src": ""
-        },
-        {
-          "name": "Playground 2",
-          "src": ""
-        },
-        {
-          "name": "Library 1",
-          "src": ""
-        },
-        {
-          "name": "Dormitory 1",
-          "src": ""
+          "src": "assets/video/waymo_106762.mp4",
+          "poster": "assets/thumb/waymo_106762.jpg"
         }
       ]
     }
   ],
   "agents": [
     {
-      "label": "4 agents",
-      "name": "4-agent reconstruction",
-      "src": "https://como3r-slam.github.io/static/video/barn_4.mp4",
-      "poster": "https://como3r-slam.github.io/static/thumbs/barn.jpg"
+      "label": "Heterogeneous cameras",
+      "name": "Barn, wide and narrow camera",
+      "src": "assets/video/barn_het.mp4",
+      "poster": "assets/thumb/barn_het.jpg"
     },
     {
-      "label": "3 agents",
-      "name": "3-agent reconstruction",
-      "src": "https://como3r-slam.github.io/static/video/caterpillar_3.mp4",
-      "poster": "https://como3r-slam.github.io/static/thumbs/caterpillar.jpg"
-    }
-  ],
-  "dayNight": [
-    {
-      "name": "Day",
-      "src": "https://como3r-slam.github.io/static/video/day.mp4",
-      "poster": ""
+      "label": "4 robots",
+      "name": "Barn, four robots",
+      "src": ""
     },
     {
-      "name": "Night",
-      "src": "https://como3r-slam.github.io/static/video/dark.mp4",
-      "poster": ""
+      "label": "3 robots",
+      "name": "Caterpillar, three robots",
+      "src": ""
     }
   ],
+  "dayNight": [],
   "comparison": {
     "base": {
-      "name": "Baseline",
-      "src": "https://como3r-slam.github.io/static/video/barn.mp4",
-      "poster": "https://como3r-slam.github.io/static/thumbs/barn.jpg"
+      "name": "CoMo3R-SLAM",
+      "src": "assets/img/render_ignatius_como3r.jpg"
     },
     "top": {
       "name": "VGGT-MA",
-      "src": "https://como3r-slam.github.io/static/video/barn_4.mp4",
-      "poster": "https://como3r-slam.github.io/static/thumbs/barn.jpg"
+      "src": "assets/img/render_ignatius_ours.jpg"
     }
   }
 };
 
 /* Benchmark table. null leaves a cell empty; the lowest value in each column is set in bold. */
 const BENCH = {
-  sub: 'Per-agent ATE (m) on TNTMultiagent and Waymo. Lower is better.',
+  sub: 'Per-agent ATE on TNTMultiagent (units of the reference trajectories) and Waymo (m), each agent aligned by Sim(3). Values of the baselines are those reported by CoMo3R-SLAM; CoMo3R-SLAM (our run) uses its default uncalibrated setting on the same keyframe protocol. Lower is better.',
   groups: [['TNTMultiagent', 4, 'blue'], ['Waymo', 4, 'orange']],
   columns: ['Barn', 'Caterpillar', 'Ignatius', 'Truck', '158686', '134763', '153495', '106762'],
+  digits: [3, 3, 3, 3, 2, 2, 2, 2],
   rows: [
-    ['CP-SLAM', null, null, null, null, null, null, null, null],
-    ['CCM-SLAM', null, null, null, null, null, null, null, null],
-    ['MAGiC-SLAM', null, null, null, null, null, null, null, null],
-    ['MAC-Ego3D', null, null, null, null, null, null, null, null],
-    ['MNE-SLAM', null, null, null, null, null, null, null, null],
-    ['MultiSlam-DiffPose', null, null, null, null, null, null, null, null],
-    ['MASt3R-SLAM', null, null, null, null, null, null, null, null],
-    ['CoMo3R-SLAM', null, null, null, null, null, null, null, null]
+    ['CP-SLAM', 4.972, 5.873, 6.178, 6.250, 12.28, 10.29, null, 32.64],
+    ['CCM-SLAM', null, null, 3.546, 2.248, 2.17, 3.81, 22.92, 5.44],
+    ['MAGiC-SLAM', 0.519, 0.349, 0.356, 0.316, 2.41, 4.47, 6.11, 15.74],
+    ['MAC-Ego3D', null, 0.361, null, 0.374, 8.18, 9.26, 11.98, null],
+    ['MNE-SLAM', 0.152, 0.155, 0.162, 0.190, 3.75, 5.05, 7.29, 5.67],
+    ['MultiSlam-DiffPose', 0.221, 0.148, 0.167, 0.035, 1.81, 2.61, null, null],
+    ['CoMo3R-SLAM', 0.051, 0.102, 0.144, 0.053, 1.77, 1.97, 3.49, 5.00],
+    ['CoMo3R-SLAM (our run)', 0.062, 0.078, 0.063, 0.045, null, null, null, null]
   ],
-  ours: ['VGGT-MA (ours)', null, null, null, null, null, null, null, null]
+  ours: ['VGGT-MA (ours)', 0.027, 0.027, 0.040, 0.032, 1.22, 0.99, 1.51, 1.25]
 };
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
@@ -563,7 +613,6 @@ chips(document.getElementById('results-chips'), [{items: MEDIA.results.map(g => 
   const grid = document.getElementById('results-grid'); clear(grid); grid.append(...g.items.map(tile));
 });
 chips(document.getElementById('agents-chips'), [{items: MEDIA.agents.map(a => ({label: a.label, a}))}], ({a}) => stage(document.getElementById('agents-stage'), a, a.label));
-MEDIA.dayNight.forEach(it => document.getElementById('lighting-grid').append(tile(it)));
 
 /* Comparison */
 (function () {
@@ -583,7 +632,7 @@ MEDIA.dayNight.forEach(it => document.getElementById('lighting-grid').append(til
     return v.length ? Math.min(...v) : null;
   });
   const starts = new Set(); let k = 0; BENCH.groups.forEach(([, n]) => { starts.add(k); k += n; });
-  const td = (v, j) => `<td class="${[starts.has(j) ? 'grp' : '', v != null && v === best[j] ? 'b' : ''].join(' ').trim()}">${v == null ? '&ndash;' : esc(v)}</td>`;
+  const td = (v, j) => `<td class="${[starts.has(j) ? 'grp' : '', v != null && v === best[j] ? 'b' : ''].join(' ').trim()}">${v == null ? '&ndash;' : esc(typeof v === 'number' && BENCH.digits ? v.toFixed(BENCH.digits[j]) : v)}</td>`;
   const tr = (r, ours) => `<tr${ours ? ' class="ours"' : ''}><td>${ours ? `<span>${esc(r[0])}</span>` : esc(r[0])}</td>${r.slice(1).map(td).join('')}</tr>`;
   document.getElementById('bench').innerHTML =
     '<thead><tr><th></th>' + BENCH.groups.map(([g, n]) => `<th class="grp" colspan="${n}">${esc(g)}</th>`).join('') + '</tr>' +
