@@ -76,6 +76,8 @@ button{font:inherit;color:inherit}
 /* Stage: a large player with its own controls */
 .stage{position:relative;overflow:hidden;aspect-ratio:16/9;border:1px solid var(--card-line);border-radius:var(--r-lg);background:radial-gradient(120% 120% at 50% 0%,#FFFFFF 0%,#FAFBFE 70%,#F3F6FC 100%);box-shadow:var(--card-shadow)}
 .stage video,.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+.stage.traj{aspect-ratio:2.9/1;background:#fff}
+.subhead{margin:2.6rem 0 1rem;font-family:var(--head);font-size:1.25rem;font-weight:700;text-align:center}
 .stage-badge{position:absolute;top:.9rem;left:50%;z-index:2;padding:.28rem .85rem;border-radius:999px;background:var(--frost);-webkit-backdrop-filter:blur(10px) saturate(160%);backdrop-filter:blur(10px) saturate(160%);color:var(--ink);box-shadow:0 0 0 1px rgba(30,50,120,.08),0 4px 12px -6px rgba(30,40,90,.25);font-family:var(--head);font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transform:translateX(-50%);pointer-events:none}
 .stage-bar{position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;align-items:center;gap:.7rem;padding:.6rem .9rem;background:linear-gradient(transparent,rgba(10,11,13,.6))}
 .play{display:flex;flex:none;align-items:center;justify-content:center;width:30px;height:30px;padding:0;border:0;border-radius:8px;background:linear-gradient(135deg,#A9C3FA 0%,#B9B2F7 55%,#C9AAF4 100%);box-shadow:0 4px 10px -6px rgba(124,118,240,.6);color:#fff;cursor:pointer}
@@ -235,6 +237,10 @@ footer .meta{margin-top:.35rem;font-size:.82rem}
   <h2>Results</h2>
   <div class="chips" id="results-chips"></div>
   <div class="gallery" id="results-grid"></div>
+  <h3 class="subhead">Trajectories against CoMo3R-SLAM</h3>
+  <div class="chips" id="traj-chips"></div>
+  <div class="stage traj" id="traj-stage"></div>
+  <p class="caption" id="traj-caption"></p>
 </div></section>
 
 <section class="section band" id="multi-agent" data-nav="Multi-Agent"><div class="container"><div class="column">
@@ -491,6 +497,88 @@ const MEDIA = {
     }
   ],
   "dayNight": [],
+  "traj": [
+  {
+    "group": "TNTMultiagent",
+    "name": "Barn",
+    "src": "assets/traj/tnt_Barn.png"
+  },
+  {
+    "group": "TNTMultiagent",
+    "name": "Caterpillar",
+    "src": "assets/traj/tnt_Caterpillar.png"
+  },
+  {
+    "group": "TNTMultiagent",
+    "name": "Ignatius",
+    "src": "assets/traj/tnt_Ignatius.png"
+  },
+  {
+    "group": "TNTMultiagent",
+    "name": "Truck",
+    "src": "assets/traj/tnt_Truck.png"
+  },
+  {
+    "group": "Tanks and Temples intermediate",
+    "name": "Family",
+    "src": "assets/traj/tnt_Family.png"
+  },
+  {
+    "group": "Tanks and Temples intermediate",
+    "name": "M60",
+    "src": "assets/traj/tnt_M60.png"
+  },
+  {
+    "group": "Tanks and Temples intermediate",
+    "name": "Panther",
+    "src": "assets/traj/tnt_Panther.png"
+  },
+  {
+    "group": "Tanks and Temples intermediate",
+    "name": "Playground",
+    "src": "assets/traj/tnt_Playground.png"
+  },
+  {
+    "group": "Tanks and Temples intermediate",
+    "name": "Train",
+    "src": "assets/traj/tnt_Train.png"
+  },
+  {
+    "group": "Mip-NeRF 360",
+    "name": "bicycle",
+    "src": "assets/traj/m360_bicycle.png"
+  },
+  {
+    "group": "Mip-NeRF 360",
+    "name": "garden",
+    "src": "assets/traj/m360_garden.png"
+  },
+  {
+    "group": "Mip-NeRF 360",
+    "name": "flowers",
+    "src": "assets/traj/m360_flowers.png"
+  },
+  {
+    "group": "Mip-NeRF 360",
+    "name": "treehill",
+    "src": "assets/traj/m360_treehill.png"
+  },
+  {
+    "group": "Mip-NeRF 360",
+    "name": "room",
+    "src": "assets/traj/m360_room.png"
+  },
+  {
+    "group": "Mip-NeRF 360",
+    "name": "counter",
+    "src": "assets/traj/m360_counter.png"
+  },
+  {
+    "group": "Mip-NeRF 360",
+    "name": "bonsai",
+    "src": "assets/traj/m360_bonsai.png"
+  }
+],
   "comparison": {
     "base": {
       "name": "CoMo3R-SLAM",
@@ -612,6 +700,14 @@ document.querySelectorAll('[data-link]').forEach(a => {
 chips(document.getElementById('results-chips'), [{items: MEDIA.results.map(g => ({label: g.label, g}))}], ({g}) => {
   const grid = document.getElementById('results-grid'); clear(grid); grid.append(...g.items.map(tile));
 });
+(function () {
+  const groups = {};
+  MEDIA.traj.forEach(it => (groups[it.group] = groups[it.group] || []).push({label: it.name, it}));
+  chips(document.getElementById('traj-chips'), Object.entries(groups).map(([g, items]) => ({title: g, items})), ({it}) => {
+    stage(document.getElementById('traj-stage'), it, it.name);
+    document.getElementById('traj-caption').innerHTML = `<span class="fig-no">Figure 2.</span> ${esc(it.group)}, ${esc(it.name)}: keyframe trajectories in top view, coloured by position error (units of the reference trajectory), reference dashed. Left: each robot alone, aligned separately; middle and right: both robots under one Sim(3) alignment.`;
+  }, true);
+})();
 chips(document.getElementById('agents-chips'), [{items: MEDIA.agents.map(a => ({label: a.label, a}))}], ({a}) => stage(document.getElementById('agents-stage'), a, a.label));
 
 /* Comparison */
