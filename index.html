@@ -287,8 +287,8 @@ const LINKS = {paper: '', arxiv: '', code: '', video: ''};
 
 /* Key numbers shown under the teaser. */
 const STATS = [
-  {value: '4', label: 'Datasets'},
-  {value: '25', label: 'Scenes'},
+  {value: '5', label: 'Datasets'},
+  {value: '35', label: 'Scenes'},
   {value: '2–4', label: 'Robots per team'},
   {value: '13 GB', label: 'GPU memory for up to four robots'}
 ];
@@ -377,7 +377,8 @@ const MEDIA = {
         },
         {
           "name": "Lighthouse",
-          "src": ""
+          "src": "assets/video/lighthouse.mp4",
+          "poster": "assets/thumb/lighthouse.jpg"
         },
         {
           "name": "Panther",
@@ -385,7 +386,8 @@ const MEDIA = {
         },
         {
           "name": "Playground",
-          "src": ""
+          "src": "assets/video/playground.mp4",
+          "poster": "assets/thumb/playground.jpg"
         },
         {
           "name": "Train",
@@ -405,31 +407,11 @@ const MEDIA = {
           "src": ""
         },
         {
-          "name": "stump",
-          "src": ""
-        },
-        {
-          "name": "flowers",
-          "src": ""
-        },
-        {
           "name": "treehill",
           "src": ""
         },
         {
-          "name": "room",
-          "src": ""
-        },
-        {
-          "name": "counter",
-          "src": ""
-        },
-        {
           "name": "kitchen",
-          "src": ""
-        },
-        {
-          "name": "bonsai",
           "src": ""
         }
       ]
@@ -597,9 +579,9 @@ const BENCH = {
     ['MNE-SLAM', 0.152, 0.155, 0.162, 0.190, 3.75, 5.05, 7.29, 5.67],
     ['MultiSlam-DiffPose', 0.221, 0.148, 0.167, 0.035, 1.81, 2.61, null, null],
     ['CoMo3R-SLAM', 0.051, 0.102, 0.144, 0.053, 1.77, 1.97, 3.49, 5.00],
-    ['CoMo3R-SLAM (our run)', 0.062, 0.078, 0.063, 0.045, null, null, null, null]
+    ['CoMo3R-SLAM (our run)', 0.061, 0.078, 0.063, 0.045, null, null, null, null]
   ],
-  ours: ['VGGT-MA (ours)', 0.027, 0.027, 0.040, 0.032, 1.22, 0.99, 1.51, 1.25]
+  ours: ['VGGT-MA (ours)', 0.025, 0.027, 0.040, 0.032, 1.22, 0.99, 1.51, 1.25]
 };
 
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
