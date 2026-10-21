@@ -330,25 +330,25 @@ const MEDIA = {
       "name": "158686",
       "src": "assets/video/waymo_158686.mp4",
       "poster": "assets/thumb/waymo_158686.jpg",
-      "group": "Waymo"
+      "group": "WaymoMultiagent"
     },
     {
       "name": "134763",
       "src": "assets/video/waymo_134763.mp4",
       "poster": "assets/thumb/waymo_134763.jpg",
-      "group": "Waymo"
+      "group": "WaymoMultiagent"
     },
     {
       "name": "153495",
       "src": "assets/video/waymo_153495.mp4",
       "poster": "assets/thumb/waymo_153495.jpg",
-      "group": "Waymo"
+      "group": "WaymoMultiagent"
     },
     {
       "name": "106762",
       "src": "assets/video/waymo_106762.mp4",
       "poster": "assets/thumb/waymo_106762.jpg",
-      "group": "Waymo"
+      "group": "WaymoMultiagent"
     }
   ],
   "results": [
@@ -448,7 +448,7 @@ const MEDIA = {
       ]
     },
     {
-      "label": "Waymo",
+      "label": "WaymoMultiagent",
       "items": [
         {
           "name": "158686",
@@ -563,8 +563,8 @@ const MEDIA = {
 
 /* Benchmark table. null leaves a cell empty; the lowest value in each column is set in bold. */
 const BENCH = {
-  sub: 'Per-agent ATE on TNTMultiagent (units of the reference trajectories) and Waymo (m), each agent aligned by Sim(3). Values of the baselines are those reported by CoMo3R-SLAM; CoMo3R-SLAM (our run) uses its default uncalibrated setting on the same keyframe protocol. Lower is better.',
-  groups: [['TNTMultiagent', 4, 'blue'], ['Waymo', 4, 'orange']],
+  sub: 'Per-agent ATE on TNTMultiagent (units of the reference trajectories) and WaymoMultiagent (m), each agent aligned by Sim(3). Values of the baselines are those reported by CoMo3R-SLAM; CoMo3R-SLAM (our run) uses its default uncalibrated setting on the same keyframe protocol. Lower is better.',
+  groups: [['TNTMultiagent', 4, 'blue'], ['WaymoMultiagent', 4, 'orange']],
   columns: ['Barn', 'Caterpillar', 'Ignatius', 'Truck', '158686', '134763', '153495', '106762'],
   digits: [3, 3, 3, 3, 2, 2, 2, 2],
   rows: [
@@ -659,7 +659,7 @@ document.querySelectorAll('[data-link]').forEach(a => {
 (function () {
   const groups = {};
   MEDIA.teaser.forEach(it => (groups[it.group] = groups[it.group] || []).push({label: it.name, it}));
-  const full = {TNT: 'TNTMultiagent', Waymo: 'Waymo'};
+  const full = {TNT: 'TNTMultiagent', Waymo: 'WaymoMultiagent'};
   chips(document.getElementById('teaser-chips'), Object.entries(groups).map(([g, items]) => ({title: full[g] || g, items})), ({it}) => {
     stage(document.getElementById('teaser-stage'), it, it.name);
     document.getElementById('teaser-caption').innerHTML = `<span class="fig-no">Figure 1.</span> ${esc(full[it.group] || it.group)}, ${esc(it.name)}.`;
