@@ -101,6 +101,10 @@ button{font:inherit;color:inherit}
 .section p.text{font-size:1rem;line-height:1.75;text-align:left}
 
 /* Gallery tiles */
+.gallery.wide{grid-template-columns:repeat(2,minmax(0,1fr))}
+.tile.traj{aspect-ratio:2.9/1}
+.tile.traj .label{top:.4rem;bottom:auto}
+.lb-stage.traj{aspect-ratio:2.9/1;background:#fff}
 .gallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem}
 .gallery.two{grid-template-columns:repeat(2,minmax(0,1fr))}
 .tile{position:relative;margin:0;overflow:hidden;aspect-ratio:4/3;border:1px solid var(--card-line);border-radius:var(--r-md);background:#fff;box-shadow:var(--card-shadow);transition:transform .25s ease,box-shadow .25s ease}
@@ -247,6 +251,7 @@ footer .meta{margin-top:.35rem;font-size:.82rem}
   <h3 class="subhead">Trajectories against CoMo3R-SLAM</h3>
   <div class="chips" id="traj-chips"></div>
   <div class="stage traj" id="traj-stage"></div>
+  <div class="gallery wide" id="traj-grid" hidden></div>
   <p class="caption" id="traj-caption"></p>
 </div></section>
 
@@ -644,7 +649,7 @@ const MEDIA = {
     }
   ],
   "comparison": [
-    {"name": "Ignatius", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_ignatius_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_ignatius_ours.jpg"}},
+    {"name": "Ignatius", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_ignatius_front_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_ignatius_front_ours.jpg"}},
     {"name": "Caterpillar", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_caterpillar_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_caterpillar_ours.jpg"}},
     {"name": "Barn", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_barn_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_barn_ours.jpg"}},
     {"name": "Truck", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_truck_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_truck_ours.jpg"}}
@@ -724,18 +729,18 @@ function tile(item, dataset) {
   f.append(m || empty(item.name));
   if (m) f.insertAdjacentHTML('beforeend', `<span class="label">${esc(item.name)}</span>`);
   if (m && dataset) f.insertAdjacentHTML('beforeend', `<span class="label ds">${esc(dataset)}</span>`);
-  if (m instanceof HTMLVideoElement) { f.classList.add('open'); f.addEventListener('click', () => lightbox(item, dataset)); }
+  if (m) { f.classList.add('open'); f.addEventListener('click', () => lightbox(item, dataset, f.classList.contains('traj'))); }
   return f;
 }
 /* Full clip of a result in an overlay, from the start, with play / scrub controls; closes on Esc, the close button or a click outside */
-function lightbox(item, dataset) {
+function lightbox(item, dataset, wide = false) {
   const lb = document.createElement('div'); lb.className = 'lb';
   lb.innerHTML = '<div class="lb-box"><div class="stage lb-stage"></div><button class="lb-close" type="button" aria-label="Close">&times;</button></div>';
   document.body.append(lb); document.body.style.overflow = 'hidden';
-  const host = lb.querySelector('.lb-stage');
+  const host = lb.querySelector('.lb-stage'); if (wide) host.classList.add('traj');
   stage(host, item, dataset ? `${dataset}, ${item.name}` : item.name);
-  const v = host.querySelector('video'); viewer.unobserve(v); v.src = item.src; v.currentTime = 0; v.play().catch(() => {});
-  const close = () => { v.pause(); clear(host); lb.remove(); document.body.style.overflow = ''; document.removeEventListener('keydown', key); };
+  const v = host.querySelector('video'); if (v) { viewer.unobserve(v); v.src = item.src; v.currentTime = 0; v.play().catch(() => {}); }
+  const close = () => { if (v) v.pause(); clear(host); lb.remove(); document.body.style.overflow = ''; document.removeEventListener('keydown', key); };
   const key = e => { if (e.key === 'Escape') close(); };
   document.addEventListener('keydown', key);
   lb.addEventListener('click', e => { if (e.target === lb || e.target.closest('.lb-close')) close(); });
@@ -786,8 +791,15 @@ chips(document.getElementById('results-chips'), [{items: [{label: 'All', all: tr
 (function () {
   const groups = {};
   MEDIA.traj.forEach(it => (groups[it.group] = groups[it.group] || []).push({label: it.name, it}));
-  chips(document.getElementById('traj-chips'), Object.entries(groups).map(([g, items]) => ({title: g, items})), ({it}) => {
-    stage(document.getElementById('traj-stage'), it, it.name);
+  const st = document.getElementById('traj-stage'), grid = document.getElementById('traj-grid'), cap = document.getElementById('traj-caption');
+  chips(document.getElementById('traj-chips'), [{title: '', items: [{label: 'All', all: true}]}, ...Object.entries(groups).map(([g, items]) => ({title: g, items}))], ({it, all}) => {
+    st.hidden = !!all; grid.hidden = !all;
+    if (all) {                                         // every scene, dataset at the bottom right; click to enlarge
+      clear(grid); grid.append(...MEDIA.traj.map(x => { const t = tile(x, x.group); t.classList.add('traj'); return t; }));
+      cap.innerHTML = `<span class="fig-no">Figure 2.</span> Keyframe trajectories in top view, coloured by position error (units of the reference trajectory), reference dashed; in each panel, left: each robot alone, aligned separately; middle and right: CoMo3R-SLAM and VGGT-MA with both robots under one Sim(3) alignment. Click a panel to enlarge.`;
+      return;
+    }
+    stage(st, it, it.name);
     document.getElementById('traj-caption').innerHTML = `<span class="fig-no">Figure 2.</span> ${esc(it.group)}, ${esc(it.name)}: keyframe trajectories in top view, coloured by position error (units of the reference trajectory), reference dashed. Left: each robot alone, aligned separately; middle and right: both robots under one Sim(3) alignment.`;
   }, true);
 })();
@@ -803,7 +815,7 @@ chips(document.getElementById('agents-chips'), [...new Set(MEDIA.agents.map(a =>
   const show = c => {
     base.replaceChildren(media(c.base) || empty(c.base.name)); top.replaceChildren(media(c.top) || empty(c.top.name));
     document.getElementById('reveal-l').textContent = c.base.name; document.getElementById('reveal-r').textContent = c.top.name;
-    document.getElementById('cmp-caption').innerHTML = `<span class="fig-no">Figure 2.</span> ${esc(c.name)}: rendering of the team map on a keyframe shared by both systems, with the same Gaussian back end. Drag the divider to compare.`;
+    document.getElementById('cmp-caption').innerHTML = `<span class="fig-no">Figure 3.</span> ${esc(c.name)}: rendering of the team map on a keyframe shared by both systems, with the same Gaussian back end. Drag the divider to compare.`;
   };
   let auto = true, k = 0;
   chips(host, [{items: MEDIA.comparison.map(c => ({label: c.name, c}))}], ({c}) => show(c));
