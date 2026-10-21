@@ -77,6 +77,7 @@ button{font:inherit;color:inherit}
 .stage{position:relative;overflow:hidden;aspect-ratio:16/9;border:1px solid var(--card-line);border-radius:var(--r-lg);background:radial-gradient(120% 120% at 50% 0%,#FFFFFF 0%,#FAFBFE 70%,#F3F6FC 100%);box-shadow:var(--card-shadow)}
 .stage video,.stage img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .stage.traj{aspect-ratio:2.9/1;background:#fff}
+.stage.pair{aspect-ratio:32/9;background:#fff}
 .subhead{margin:2.6rem 0 1rem;font-family:var(--head);font-size:1.25rem;font-weight:700;text-align:center}
 .stage-badge{position:absolute;top:.9rem;left:50%;z-index:2;padding:.28rem .85rem;border-radius:999px;background:var(--frost);-webkit-backdrop-filter:blur(10px) saturate(160%);backdrop-filter:blur(10px) saturate(160%);color:var(--ink);box-shadow:0 0 0 1px rgba(30,50,120,.08),0 4px 12px -6px rgba(30,40,90,.25);font-family:var(--head);font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transform:translateX(-50%);pointer-events:none}
 .stage-bar{position:absolute;left:0;right:0;bottom:0;z-index:2;display:flex;align-items:center;gap:.7rem;padding:.6rem .9rem;background:linear-gradient(transparent,rgba(10,11,13,.6))}
@@ -265,6 +266,11 @@ footer .meta{margin-top:.35rem;font-size:.82rem}
 
 <section class="section band" id="comparison" data-nav="Comparison"><div class="container"><div class="column">
   <h2>Comparison</h2>
+  <h3 class="subhead">Team maps on the same keyframes</h3>
+  <div class="chips" id="cmp3d-chips"></div>
+  <div class="stage pair" id="cmp3d-stage"></div>
+  <p class="caption" id="cmp3d-caption"></p>
+  <h3 class="subhead">Rendering</h3>
   <div class="reveal" id="reveal">
     <div class="layer base" id="reveal-base"></div>
     <div class="layer top" id="reveal-top"></div>
@@ -648,11 +654,21 @@ const MEDIA = {
       "src": "assets/traj/m360_treehill.png"
     }
   ],
+  "cmp3d": [
+    {"name": "Ignatius", "src": "assets/video/cmp3d_ignatius.mp4", "poster": "assets/thumb/cmp3d_ignatius.jpg"},
+    {"name": "Caterpillar", "src": "assets/video/cmp3d_caterpillar.mp4", "poster": "assets/thumb/cmp3d_caterpillar.jpg"},
+    {"name": "Barn", "src": "assets/video/cmp3d_barn.mp4", "poster": "assets/thumb/cmp3d_barn.jpg"},
+    {"name": "Truck", "src": "assets/video/cmp3d_truck.mp4", "poster": "assets/thumb/cmp3d_truck.jpg"}
+  ],
   "comparison": [
-    {"name": "Ignatius", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_ignatius_front_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_ignatius_front_ours.jpg"}},
-    {"name": "Caterpillar", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_caterpillar_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_caterpillar_ours.jpg"}},
-    {"name": "Barn", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_barn_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_barn_ours.jpg"}},
-    {"name": "Truck", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_truck_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_truck_ours.jpg"}}
+    {"scene": "Ignatius", "name": "View 1", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_ignatius_v1_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_ignatius_v1_ours.jpg"}},
+    {"scene": "Ignatius", "name": "View 2", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_ignatius_v2_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_ignatius_v2_ours.jpg"}},
+    {"scene": "Caterpillar", "name": "View 1", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_caterpillar_v1_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_caterpillar_v1_ours.jpg"}},
+    {"scene": "Caterpillar", "name": "View 2", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_caterpillar_v2_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_caterpillar_v2_ours.jpg"}},
+    {"scene": "Barn", "name": "View 1", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_barn_v1_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_barn_v1_ours.jpg"}},
+    {"scene": "Barn", "name": "View 2", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_barn_v2_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_barn_v2_ours.jpg"}},
+    {"scene": "Truck", "name": "View 1", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_truck_v1_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_truck_v1_ours.jpg"}},
+    {"scene": "Truck", "name": "View 2", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_truck_v2_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_truck_v2_ours.jpg"}}
   ]
 };
 
@@ -806,6 +822,12 @@ chips(document.getElementById('results-chips'), [{items: [{label: 'All', all: tr
 chips(document.getElementById('agents-chips'), [...new Set(MEDIA.agents.map(a => a.group))].map(g => ({title: g, items: MEDIA.agents.filter(a => a.group === g).map(a => ({label: a.label, a}))})),
   ({a}) => stage(document.getElementById('agents-stage'), a, a.name), true);
 
+/* Comparison of the team maps: CoMo3R-SLAM (left) and VGGT-MA (right) on the same keyframes, same display and camera path */
+chips(document.getElementById('cmp3d-chips'), [{items: MEDIA.cmp3d.map(c => ({label: c.name, c}))}], ({c}) => {
+  stage(document.getElementById('cmp3d-stage'), c, c.name);
+  document.getElementById('cmp3d-caption').innerHTML = `<span class="fig-no">Figure 3.</span> TNTMultiagent, ${esc(c.name)}: team maps of CoMo3R-SLAM (left) and VGGT-MA (right) built from the keyframes both systems select, exported with the same filters and shown along the same camera path.`;
+});
+
 /* Comparison: one scene at a time, chosen below the slider; turns to the next scene every 6 s until the viewer interacts */
 (function () {
   const box = document.getElementById('reveal'), range = document.getElementById('reveal-range');
@@ -815,10 +837,10 @@ chips(document.getElementById('agents-chips'), [...new Set(MEDIA.agents.map(a =>
   const show = c => {
     base.replaceChildren(media(c.base) || empty(c.base.name)); top.replaceChildren(media(c.top) || empty(c.top.name));
     document.getElementById('reveal-l').textContent = c.base.name; document.getElementById('reveal-r').textContent = c.top.name;
-    document.getElementById('cmp-caption').innerHTML = `<span class="fig-no">Figure 3.</span> ${esc(c.name)}: rendering of the team map on a keyframe shared by both systems, with the same Gaussian back end. Drag the divider to compare.`;
+    document.getElementById('cmp-caption').innerHTML = `<span class="fig-no">Figure 4.</span> ${esc(c.scene)}, ${esc(c.name.toLowerCase())}: rendering of the team map on a keyframe shared by both systems, with the same Gaussian back end. Drag the divider to compare.`;
   };
   let auto = true, k = 0;
-  chips(host, [{items: MEDIA.comparison.map(c => ({label: c.name, c}))}], ({c}) => show(c));
+  chips(host, [...new Set(MEDIA.comparison.map(c => c.scene))].map(g => ({title: g, items: MEDIA.comparison.filter(c => c.scene === g).map(c => ({label: c.name, c}))})), ({c}) => show(c), true);
   const btns = [...host.querySelectorAll('.chip')];
   btns.forEach(b => b.addEventListener('click', e => { if (e.isTrusted) auto = false; }));
   range.addEventListener('pointerdown', () => { auto = false; });
