@@ -104,6 +104,12 @@ button{font:inherit;color:inherit}
 .gallery{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem}
 .gallery.two{grid-template-columns:repeat(2,minmax(0,1fr))}
 .tile{position:relative;margin:0;overflow:hidden;aspect-ratio:4/3;border:1px solid var(--card-line);border-radius:var(--r-md);background:#fff;box-shadow:var(--card-shadow);transition:transform .25s ease,box-shadow .25s ease}
+.tile.open{cursor:zoom-in}
+.tile .label.ds{left:auto;right:.6rem}
+.lb{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:4vh 4vw;background:rgba(14,18,30,.72);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);animation:fadein .25s ease}
+.lb-box{position:relative;width:min(1280px,92vw)}
+.lb-stage{box-shadow:0 30px 80px -20px rgba(0,0,0,.6)}
+.lb-close{position:absolute;top:-2.6rem;right:0;width:2.2rem;height:2.2rem;border:0;border-radius:999px;background:#fff;color:#1A1A1A;font-size:1.5rem;line-height:1;cursor:pointer}
 .tile:hover{transform:translateY(-3px);box-shadow:var(--card-shadow-hi)}
 .tile video,.tile img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 .tile .label{position:absolute;left:.6rem;bottom:.6rem;z-index:1;padding:.2rem .65rem;border-radius:999px;background:var(--frost);-webkit-backdrop-filter:blur(10px) saturate(160%);backdrop-filter:blur(10px) saturate(160%);color:var(--ink);box-shadow:0 0 0 1px rgba(30,50,120,.08),0 4px 12px -6px rgba(30,40,90,.25);font-family:var(--head);font-size:.8rem;font-weight:500}
@@ -696,22 +702,43 @@ function stage(host, item, badge) {
   host.append(m || empty(item && item.name));
   if (badge) host.insertAdjacentHTML('beforeend', `<span class="stage-badge">${esc(badge)}</span>`);
   if (!(m instanceof HTMLVideoElement)) return;
-  host.insertAdjacentHTML('beforeend', `<div class="stage-bar"><button class="play" type="button" aria-label="Pause">${ICON_PAUSE}</button><input class="scrub" type="range" min="0" max="1000" value="0" aria-label="Time"><span class="time">0.0 / 0.0 s</span></div>`);
+  host.insertAdjacentHTML('beforeend', `<div class="stage-bar"><button class="play" type="button" aria-label="Pause">${ICON_PAUSE}</button><input class="scrub" type="range" min="0" max="10000" value="0" aria-label="Time"><span class="time">0.0 / 0.0 s</span></div>`);
   const play = host.querySelector('.play'), scrub = host.querySelector('.scrub'), time = host.querySelector('.time');
   const sync = () => { play.innerHTML = m.paused ? ICON_PLAY : ICON_PAUSE; play.setAttribute('aria-label', m.paused ? 'Play' : 'Pause'); };
   play.addEventListener('click', () => { if (m.paused) { delete m.dataset.paused; if (!m.src) m.src = m.dataset.src; m.play(); } else { m.dataset.paused = '1'; m.pause(); } });
   m.addEventListener('play', sync); m.addEventListener('pause', sync);
-  const fillTo = () => scrub.style.setProperty('--p', (scrub.value / 10) + '%');
-  m.addEventListener('timeupdate', () => { if (m.duration) { scrub.value = Math.round(m.currentTime / m.duration * 1000); fillTo(); time.textContent = `${m.currentTime.toFixed(1)} / ${m.duration.toFixed(1)} s`; } });
-  scrub.addEventListener('input', () => { fillTo(); if (m.duration) m.currentTime = scrub.value / 1000 * m.duration; });
+  const fillTo = () => scrub.style.setProperty('--p', (scrub.value / 100) + '%');
+  // the bar follows the picture every display frame (timeupdate fires only about four times a second); not while dragged
+  let drag = false;
+  const show = () => { if (!m.duration) return; if (!drag) { scrub.value = Math.round(m.currentTime / m.duration * 10000); fillTo(); } time.textContent = `${m.currentTime.toFixed(1)} / ${m.duration.toFixed(1)} s`; };
+  const tick = () => { if (!host.isConnected || !m.isConnected) return; show(); if (!m.paused) requestAnimationFrame(tick); };
+  m.addEventListener('play', () => requestAnimationFrame(tick)); m.addEventListener('seeked', show); m.addEventListener('loadedmetadata', show);
+  scrub.addEventListener('pointerdown', () => { drag = true; });
+  ['pointerup', 'pointercancel', 'change'].forEach(e => scrub.addEventListener(e, () => { drag = false; }));
+  scrub.addEventListener('input', () => { fillTo(); if (m.duration) m.currentTime = scrub.value / 10000 * m.duration; });
 }
-function tile(item) {
+function tile(item, dataset) {
   const f = document.createElement('figure');
   f.className = 'tile';
   const m = media(item);
   f.append(m || empty(item.name));
   if (m) f.insertAdjacentHTML('beforeend', `<span class="label">${esc(item.name)}</span>`);
+  if (m && dataset) f.insertAdjacentHTML('beforeend', `<span class="label ds">${esc(dataset)}</span>`);
+  if (m instanceof HTMLVideoElement) { f.classList.add('open'); f.addEventListener('click', () => lightbox(item, dataset)); }
   return f;
+}
+/* Full clip of a result in an overlay, from the start, with play / scrub controls; closes on Esc, the close button or a click outside */
+function lightbox(item, dataset) {
+  const lb = document.createElement('div'); lb.className = 'lb';
+  lb.innerHTML = '<div class="lb-box"><div class="stage lb-stage"></div><button class="lb-close" type="button" aria-label="Close">&times;</button></div>';
+  document.body.append(lb); document.body.style.overflow = 'hidden';
+  const host = lb.querySelector('.lb-stage');
+  stage(host, item, dataset ? `${dataset}, ${item.name}` : item.name);
+  const v = host.querySelector('video'); viewer.unobserve(v); v.src = item.src; v.currentTime = 0; v.play().catch(() => {});
+  const close = () => { v.pause(); clear(host); lb.remove(); document.body.style.overflow = ''; document.removeEventListener('keydown', key); };
+  const key = e => { if (e.key === 'Escape') close(); };
+  document.addEventListener('keydown', key);
+  lb.addEventListener('click', e => { if (e.target === lb || e.target.closest('.lb-close')) close(); });
 }
 function chips(host, groups, onPick, titled = false) {
   const all = [];
@@ -751,8 +778,10 @@ document.querySelectorAll('[data-link]').forEach(a => {
 })();
 
 /* Results, multi-agent, day and night */
-chips(document.getElementById('results-chips'), [{items: MEDIA.results.map(g => ({label: g.label, g}))}], ({g}) => {
-  const grid = document.getElementById('results-grid'); clear(grid); grid.append(...g.items.map(tile));
+chips(document.getElementById('results-chips'), [{items: [{label: 'All', all: true}, ...MEDIA.results.map(g => ({label: g.label, g}))]}], it => {
+  const grid = document.getElementById('results-grid'); clear(grid);
+  if (it.all) grid.append(...MEDIA.results.flatMap(g => g.items.map(x => tile(x, g.label))));   // every clip, dataset at the bottom right
+  else grid.append(...it.g.items.map(x => tile(x, it.g.label)).map(t => (t.querySelector('.ds')?.remove(), t)));
 });
 (function () {
   const groups = {};
