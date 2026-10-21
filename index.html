@@ -115,6 +115,7 @@ button{font:inherit;color:inherit}
 .reveal .layer{position:absolute;inset:0}
 .reveal .layer video,.reveal .layer img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff}
 .reveal .top{clip-path:inset(0 0 0 var(--pos))}
+.cmp-chips{margin:1.3rem 0 0}
 .reveal .empty{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;background:#fff}
 .reveal .base .empty{padding-right:50%}
 .reveal .top .empty{padding-left:50%;background:var(--accent-tint)}
@@ -260,6 +261,8 @@ footer .meta{margin-top:.35rem;font-size:.82rem}
     <span class="rvtag l" id="reveal-l">CoMo3R-SLAM</span><span class="rvtag r" id="reveal-r">VGGT-MA</span>
     <input class="rvrange" id="reveal-range" type="range" min="0" max="100" step="0.1" value="50" aria-label="Divider position">
   </div>
+  <div class="chips cmp-chips" id="cmp-chips"></div>
+  <p class="caption" id="cmp-caption"></p>
 </div></div></section>
 
 <section class="section" id="benchmarks" data-nav="Benchmarks"><div class="container"><div class="column">
@@ -549,16 +552,12 @@ const MEDIA = {
       "src": "assets/traj/m360_treehill.png"
     }
   ],
-  "comparison": {
-    "base": {
-      "name": "CoMo3R-SLAM",
-      "src": "assets/img/render_ignatius_como3r.jpg"
-    },
-    "top": {
-      "name": "VGGT-MA",
-      "src": "assets/img/render_ignatius_ours.jpg"
-    }
-  }
+  "comparison": [
+    {"name": "Ignatius", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_ignatius_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_ignatius_ours.jpg"}},
+    {"name": "Caterpillar", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_caterpillar_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_caterpillar_ours.jpg"}},
+    {"name": "Barn", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_barn_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_barn_ours.jpg"}},
+    {"name": "Truck", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_truck_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_truck_ours.jpg"}}
+  ]
 };
 
 /* Benchmark table. null leaves a cell empty; the lowest value in each column is set in bold. */
@@ -680,14 +679,26 @@ chips(document.getElementById('results-chips'), [{items: MEDIA.results.map(g => 
 })();
 chips(document.getElementById('agents-chips'), [{items: MEDIA.agents.map(a => ({label: a.label, a}))}], ({a}) => stage(document.getElementById('agents-stage'), a, a.label));
 
-/* Comparison */
+/* Comparison: one scene at a time, chosen below the slider; turns to the next scene every 6 s until the viewer interacts */
 (function () {
-  const c = MEDIA.comparison, box = document.getElementById('reveal'), range = document.getElementById('reveal-range');
-  [['reveal-base', c.base], ['reveal-top', c.top]].forEach(([id, it]) => { const host = document.getElementById(id); host.append(media(it) || empty(it.name)); });
-  document.getElementById('reveal-l').textContent = c.base.name;
-  document.getElementById('reveal-r').textContent = c.top.name;
+  const box = document.getElementById('reveal'), range = document.getElementById('reveal-range');
+  const base = document.getElementById('reveal-base'), top = document.getElementById('reveal-top'), host = document.getElementById('cmp-chips');
   const update = () => box.style.setProperty('--pos', range.value + '%');
   range.addEventListener('input', update); update();
+  const show = c => {
+    base.replaceChildren(media(c.base) || empty(c.base.name)); top.replaceChildren(media(c.top) || empty(c.top.name));
+    document.getElementById('reveal-l').textContent = c.base.name; document.getElementById('reveal-r').textContent = c.top.name;
+    document.getElementById('cmp-caption').innerHTML = `<span class="fig-no">Figure 2.</span> ${esc(c.name)}: rendering of the team map on a keyframe shared by both systems, with the same Gaussian back end. Drag the divider to compare.`;
+  };
+  let auto = true, k = 0;
+  chips(host, [{items: MEDIA.comparison.map(c => ({label: c.name, c}))}], ({c}) => show(c));
+  const btns = [...host.querySelectorAll('.chip')];
+  btns.forEach(b => b.addEventListener('click', e => { if (e.isTrusted) auto = false; }));
+  range.addEventListener('pointerdown', () => { auto = false; });
+  setInterval(() => {
+    if (!auto || btns.length < 2 || document.hidden) return;
+    k = (k + 1) % btns.length; btns[k].click();
+  }, 6000);
 })();
 
 /* Benchmarks */
