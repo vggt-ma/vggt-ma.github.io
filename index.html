@@ -654,12 +654,7 @@ const MEDIA = {
       "src": "assets/traj/m360_treehill.png"
     }
   ],
-  "cmp3d": [
-    {"name": "Ignatius", "src": "assets/video/cmp3d_ignatius.mp4", "poster": "assets/thumb/cmp3d_ignatius.jpg"},
-    {"name": "Caterpillar", "src": "assets/video/cmp3d_caterpillar.mp4", "poster": "assets/thumb/cmp3d_caterpillar.jpg"},
-    {"name": "Barn", "src": "assets/video/cmp3d_barn.mp4", "poster": "assets/thumb/cmp3d_barn.jpg"},
-    {"name": "Truck", "src": "assets/video/cmp3d_truck.mp4", "poster": "assets/thumb/cmp3d_truck.jpg"}
-  ],
+  "cmp3d": [],
   "comparison": [
     {"scene": "Ignatius", "name": "View 1", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_ignatius_v1_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_ignatius_v1_ours.jpg"}},
     {"scene": "Ignatius", "name": "View 2", "base": {"name": "CoMo3R-SLAM", "src": "assets/img/render_ignatius_v2_como3r.jpg"}, "top": {"name": "VGGT-MA", "src": "assets/img/render_ignatius_v2_ours.jpg"}},
@@ -823,6 +818,7 @@ chips(document.getElementById('agents-chips'), [...new Set(MEDIA.agents.map(a =>
   ({a}) => stage(document.getElementById('agents-stage'), a, a.name), true);
 
 /* Comparison of the team maps: CoMo3R-SLAM (left) and VGGT-MA (right) on the same keyframes, same display and camera path */
+if (!MEDIA.cmp3d.length) document.querySelectorAll('#cmp3d-chips, #cmp3d-stage, #cmp3d-caption').forEach(e => { e.hidden = true; (e.previousElementSibling?.matches('h3') ? e.previousElementSibling : null)?.setAttribute('hidden', ''); });
 chips(document.getElementById('cmp3d-chips'), [{items: MEDIA.cmp3d.map(c => ({label: c.name, c}))}], ({c}) => {
   stage(document.getElementById('cmp3d-stage'), c, c.name);
   document.getElementById('cmp3d-caption').innerHTML = `<span class="fig-no">Figure 3.</span> TNTMultiagent, ${esc(c.name)}: team maps of CoMo3R-SLAM (left) and VGGT-MA (right) built from the keyframes both systems select, exported with the same filters and shown along the same camera path.`;
