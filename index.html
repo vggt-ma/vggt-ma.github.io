@@ -478,10 +478,53 @@ const MEDIA = {
   ],
   "agents": [
     {
-      "label": "Heterogeneous cameras",
-      "name": "Barn, wide and narrow camera",
+      "group": "Heterogeneous cameras",
+      "label": "Barn",
+      "name": "Barn, one robot with a different camera",
       "src": "assets/video/barn_het.mp4",
       "poster": "assets/thumb/barn_het.jpg"
+    },
+    {
+      "group": "Heterogeneous cameras",
+      "label": "Caterpillar",
+      "name": "Caterpillar, one robot with a different camera",
+      "src": "assets/video/caterpillar_het.mp4",
+      "poster": "assets/thumb/caterpillar_het.jpg"
+    },
+    {
+      "group": "Heterogeneous cameras",
+      "label": "Ignatius",
+      "name": "Ignatius, one robot with a different camera",
+      "src": "assets/video/ignatius_het.mp4",
+      "poster": "assets/thumb/ignatius_het.jpg"
+    },
+    {
+      "group": "Heterogeneous cameras",
+      "label": "Truck",
+      "name": "Truck, one robot with a different camera",
+      "src": "assets/video/truck_het.mp4",
+      "poster": "assets/thumb/truck_het.jpg"
+    },
+    {
+      "group": "Heterogeneous cameras",
+      "label": "158686",
+      "name": "WaymoMultiagent 158686, one robot with a different camera",
+      "src": "assets/video/waymo_158686_het.mp4",
+      "poster": "assets/thumb/waymo_158686_het.jpg"
+    },
+    {
+      "group": "More robots",
+      "label": "Barn, 4 robots",
+      "name": "Barn, four robots",
+      "src": "assets/video/barn_4a.mp4",
+      "poster": "assets/thumb/barn_4a.jpg"
+    },
+    {
+      "group": "More robots",
+      "label": "Caterpillar, 3 robots",
+      "name": "Caterpillar, three robots",
+      "src": "assets/video/caterpillar_3a.mp4",
+      "poster": "assets/thumb/caterpillar_3a.jpg"
     }
   ],
   "dayNight": [],
@@ -677,7 +720,8 @@ chips(document.getElementById('results-chips'), [{items: MEDIA.results.map(g => 
     document.getElementById('traj-caption').innerHTML = `<span class="fig-no">Figure 2.</span> ${esc(it.group)}, ${esc(it.name)}: keyframe trajectories in top view, coloured by position error (units of the reference trajectory), reference dashed. Left: each robot alone, aligned separately; middle and right: both robots under one Sim(3) alignment.`;
   }, true);
 })();
-chips(document.getElementById('agents-chips'), [{items: MEDIA.agents.map(a => ({label: a.label, a}))}], ({a}) => stage(document.getElementById('agents-stage'), a, a.label));
+chips(document.getElementById('agents-chips'), [...new Set(MEDIA.agents.map(a => a.group))].map(g => ({title: g, items: MEDIA.agents.filter(a => a.group === g).map(a => ({label: a.label, a}))})),
+  ({a}) => stage(document.getElementById('agents-stage'), a, a.name), true);
 
 /* Comparison: one scene at a time, chosen below the slider; turns to the next scene every 6 s until the viewer interacts */
 (function () {
