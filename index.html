@@ -266,12 +266,12 @@ footer{padding:2.5rem 0 3rem;border-top:1px solid rgba(60,40,170,.08);font-size:
 @media (max-width:860px){.topbar nav{display:none}.topbar .btn{margin-left:auto}}
 
 /* Key numbers under the teaser */
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:2rem;border:1px solid var(--card-line);border-radius:var(--r-lg);background:#fff;box-shadow:var(--card-shadow)}
-.stat{padding:1.4rem 1.2rem;text-align:center}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:2.4rem;border:1px solid var(--card-line);border-radius:var(--r-md);background:#fff;box-shadow:var(--card-shadow)}
+.stat{display:flex;align-items:center;justify-content:center;gap:.5rem;padding:.75rem .8rem;text-align:center}
 .stat + .stat{border-left:1px solid var(--card-line)}
-.stat b{display:block;font-family:var(--head);font-size:2.4rem;font-weight:700;line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;background:var(--grad3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.stat span{display:block;margin-top:.35rem;font-size:.88rem}
-@media (max-width:700px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat:nth-child(3){border-left:0}.stat:nth-child(n+3){border-top:1px solid var(--card-line)}}
+.stat b{display:block;flex:none;font-family:var(--head);font-size:1.5rem;font-weight:700;line-height:1.1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;background:var(--grad3);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.stat span{display:block;font-size:.84rem;line-height:1.3;text-align:left}
+@media (max-width:700px){.stat{flex-direction:column;align-items:center;gap:.15rem;padding:.6rem .3rem}.stat b{font-size:1.2rem}.stat span{font-size:.64rem;text-align:center}}
 
 /* Player chrome stays out of the way until the pointer is over the stage */
 @media (hover:hover){
@@ -314,8 +314,7 @@ footer .meta{margin-top:.35rem;font-size:.82rem}
   <div class="chips" id="teaser-chips"></div>
   <div class="stage" id="teaser-stage"></div>
   <p class="caption" id="teaser-caption"></p>
-  <div class="stats" id="stats"></div>
-  <h3 class="subhead demo-head">Four robots, one map</h3>
+  <h3 class="subhead demo-head">Animated Example</h3>
   <div class="stage demo" id="demo-stage">
     <canvas id="demo-canvas" aria-label="Interactive reconstruction of the four-robot team"></canvas>
     <span class="stage-badge" id="demo-badge"></span>
@@ -343,6 +342,7 @@ footer .meta{margin-top:.35rem;font-size:.82rem}
   </div>
   <div class="dm-ate" id="demo-ate"></div>
   <p class="caption" id="demo-caption"></p>
+  <div class="stats" id="stats"></div>
 </div></section>
 
 
@@ -411,7 +411,7 @@ const STATS = [
   {value: '5', label: 'Datasets'},
   {value: '35', label: 'Scenes'},
   {value: '2–4', label: 'Robots per team'},
-  {value: '13 GB', label: 'GPU memory for up to four robots'}
+  {value: '13 GB', label: 'GPU memory, 4 robots'}
 ];
 
 /* Our own results; an empty src shows a placeholder until the clip is rendered. */
@@ -1681,7 +1681,7 @@ const $ = id => document.getElementById(id);
 const host = $('demo-stage'), canvas = $('demo-canvas'), badge = $('demo-badge'), load = $('demo-load'), cap = $('demo-caption'), ateBox = $('demo-ate');
 const tl = $('demo-tl'), rail = tl.querySelector('.dm-rail'), fill = $('demo-fill'), thumb = $('demo-thumb');
 const stops = [...tl.querySelectorAll('.dm-stop')], labels = [...tl.querySelectorAll('.dm-labels span')];
-const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;   // only stops the idle orbit: the replay is the content and always animates
 const ICON = {play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15a1 1 0 0 0 1.53.85l12-7.5a1 1 0 0 0 0-1.7l-12-7.5A1 1 0 0 0 7 4.5z"/></svg>',
               pause: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>'};
 const ease = u => (u = Math.min(1, Math.max(0, u)), u * u * (3 - 2 * u));
@@ -1692,6 +1692,7 @@ const H2F = (() => { const t = new Float32Array(65536);
 const half = (buf, off, n) => { const u = new Uint16Array(buf, off, n), o = new Float32Array(n); for (let i = 0; i < n; i++) o[i] = H2F[u[i]]; return o; };
 
 let renderer, scene, camera, controls, mode = 'opt', T = 0, solo = -1, colourMix = 0, anim = null, dirty = true, autoCam = true;
+let ready = null, started = false, paused = null;          // autoplay: starts when the stage is in view, pauses when it leaves
 const opt = {}, ren = {cache: {}, k: 6, timer: null};
 const camGoal = {pos: new THREE.Vector3(), tgt: new THREE.Vector3()};
 
@@ -1848,7 +1849,7 @@ function tick(now) {
   }
   if (ren.fade) {
     const f = ren.fade; if (f.t0 == null) f.t0 = now;
-    const a = ease((now - f.t0) / (reduce ? 1 : 1000));
+    const a = ease((now - f.t0) / 1000);
     if (f.from && f.from.points) mapOpacity(f.from, 1 - a);
     mapOpacity(f.to, a);
     if (a >= 1) ren.fade = null;
@@ -1874,7 +1875,7 @@ tl.addEventListener('pointerdown', e => {
   const mv = ev => setT(tFromX(ev.clientX)), up = () => { tl.removeEventListener('pointermove', mv); tl.removeEventListener('pointerup', up); };
   tl.addEventListener('pointermove', mv); tl.addEventListener('pointerup', up);
 });
-labels.forEach(s => s.addEventListener('pointerdown', e => { e.stopPropagation(); stopPlay(); go(+s.dataset.t, 900 * Math.abs(+s.dataset.t - T) + 300); }));
+labels.forEach(s => s.addEventListener('pointerdown', e => { e.stopPropagation(); stopPlay(); go(+s.dataset.t, 2500 * Math.abs(+s.dataset.t - T) + 400); }));
 tl.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { stopPlay(); setT(T + (e.key === 'ArrowRight' ? .05 : -.05)); e.preventDefault(); } });
 
 function table(st) {
@@ -1897,15 +1898,15 @@ function caption(st) {
 const playBtn = $('demo-play');
 const setPlay = on => { playBtn.innerHTML = on ? ICON.pause : ICON.play; playBtn.setAttribute('aria-label', on ? 'Pause' : 'Play'); };
 const playing = () => playBtn.getAttribute('aria-label') === 'Pause';
-function go(to, dur, next, lin) { anim = {from: T, to, dur: reduce ? 1 : dur, t0: null, next, lin}; }
-function stopPlay() { anim = null; setPlay(false); }
+function go(to, dur, next, lin) { anim = {from: T, to, dur, t0: null, next, lin}; }
+function stopPlay() { anim = null; paused = null; setPlay(false); }
 const hold = (ms, f) => setTimeout(() => { if (playing()) f(); }, ms);
 function play(fromStart) {
-  setPlay(true);
+  paused = null; started = true; setPlay(true);
   if (fromStart || T > 2.98) setT(0);
   const end = solo >= 0 ? 1 : 3;
-  const seq = [[1, 9000 * (solo >= 0 ? .8 : 1), true], [2, 2600], [3, 2800]].filter(([to]) => to <= end && to > T + 1e-3);
-  const step = i => { if (i >= seq.length) { setPlay(false); return; } const [to, d, lin] = seq[i]; go(to, d * Math.max(.2, (to - T)), () => hold(900, () => step(i + 1)), lin); };
+  const seq = [[1, 14000 * (solo >= 0 ? .75 : 1), true], [2, 5200], [3, 6000]].filter(([to]) => to <= end && to > T + 1e-3);   // ms per stage
+  const step = i => { if (i >= seq.length) { setPlay(false); return; } const [to, d, lin] = seq[i]; go(to, d * Math.max(.2, Math.min(1, to - T)), () => hold(1500, () => step(i + 1)), lin); };
   step(0);
 }
 playBtn.addEventListener('click', () => playing() ? stopPlay() : play(false));
@@ -1921,7 +1922,8 @@ const whoBox = $('demo-who'), whoBtns = [];
 function pickWho(r) {
   solo = r; whoBtns.forEach(([b, x]) => b.setAttribute('aria-pressed', String(x === r)));
   if (mode === 'ren') return;
-  autoCam = true; stopPlay(); setT(0); view(); play(true);
+  autoCam = true; stopPlay(); setT(0); view();
+  if (started) play(true);                                     // the first replay waits until the stage is in view
 }
 $('demo-colour').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; colourMix = +b.dataset.v;
   $('demo-colour').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); });
@@ -2017,8 +2019,15 @@ function setMode(m) {
 }
 tabs.forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
 setPlay(false); stopRen(); pickWho(-1); setT(0);
-new IntersectionObserver((es, ob) => { if (es.some(e => e.isIntersecting)) { ob.disconnect();
-  init().then(() => setTimeout(() => { if (!playing() && T === 0) play(true); }, 500)).catch(err => { load.textContent = 'Unavailable'; console.error(err); }); } }, {rootMargin: '200px'}).observe(host);
+/* load when near the screen; play once most of the stage is in view, pause when it leaves, resume when it returns */
+new IntersectionObserver((es, ob) => { if (es.some(e => e.isIntersecting)) { ob.disconnect(); ready = init().catch(err => { load.textContent = 'Unavailable'; console.error(err); }); } }, {rootMargin: '400px'}).observe(host);
+new IntersectionObserver(es => es.forEach(async e => {
+  if (!ready) return; await ready;
+  if (e.intersectionRatio >= .6) {
+    if (!started) { started = true; if (mode === 'opt') play(true); }
+    else if (paused) { const p = paused; paused = null; anim = p; anim.t0 = null; anim.from = T; setPlay(true); }
+  } else if (anim && playing()) { paused = {...anim, from: T}; anim = null; setPlay(false); }
+}), {threshold: [0, .6]}).observe(host);
 </script>
 
 </body>
