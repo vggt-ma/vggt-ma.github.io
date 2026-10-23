@@ -150,7 +150,9 @@ button{font:inherit;color:inherit}
 .dm-robot[aria-pressed="true"]{border-color:color-mix(in srgb,var(--c) 45%,#fff);background:color-mix(in srgb,var(--c) 10%,#fff);color:color-mix(in srgb,var(--c) 75%,#000);font-weight:700;box-shadow:0 4px 12px -8px var(--c)}
 
 /* ATE below the stage */
-.dm-ate{display:flex;justify-content:center;margin-top:1.1rem}
+.dm-ate{display:flex;justify-content:center;margin-top:1.1rem;overflow-x:auto}
+.dm-labels em,.dm-ate em{font-style:normal}
+.dm-labels .s,.dm-ate .s{display:none}
 .dm-ate:empty{display:none}
 .dm-ate table{border-collapse:separate;border-spacing:0;font-size:.88rem;font-variant-numeric:tabular-nums}
 .dm-ate th,.dm-ate td{padding:.28rem .9rem;text-align:right;font-weight:400;transition:background .25s ease,color .25s ease}
@@ -162,7 +164,7 @@ button{font:inherit;color:inherit}
 .dm-ate tr.on td:last-child{border-radius:0 8px 8px 0}
 .dm-ate td.team,.dm-ate th.team{border-left:1px solid rgba(124,118,240,.22)}
 
-@media (max-width:600px){.stage.demo{aspect-ratio:1/1}.dm-tools{top:2.4rem;right:.45rem}.dm-seg button,.dm-btn{padding:.15rem .5rem;font-size:.7rem}#demo-badge{top:.5rem;font-size:.62rem;white-space:nowrap}.dm-labels span{font-size:.66rem;padding:.1rem .2rem}.dm-labels span:first-child{transform:translateX(-.2rem)}.dm-labels span:last-child{transform:translateX(calc(-100% + .2rem))}.dm-tabs button{font-size:.86rem;padding:.35rem .8rem}.dm-row .play{width:32px;height:32px}.dm-ate table{font-size:.66rem}.dm-ate th,.dm-ate td{padding:.2rem .35rem}}
+@media (max-width:600px){.dm-labels .l,.dm-ate .l{display:none}.dm-labels .s,.dm-ate .s{display:inline}.dm-ate{justify-content:flex-start}.stage.demo{aspect-ratio:1/1}.dm-tools{top:2.4rem;right:.45rem}.dm-seg button,.dm-btn{padding:.15rem .5rem;font-size:.7rem}#demo-badge{top:.5rem;font-size:.62rem;white-space:nowrap}.dm-labels span{font-size:.66rem;padding:.1rem .2rem}.dm-labels span:first-child{transform:translateX(-.2rem)}.dm-labels span:last-child{transform:translateX(calc(-100% + .2rem))}.dm-tabs button{font-size:.86rem;padding:.35rem .8rem}.dm-row .play{width:32px;height:32px}.dm-ate table{font-size:.66rem}.dm-ate th,.dm-ate td{padding:.2rem .35rem}}
 
 .caption{margin-top:.85rem;font-size:.9rem;line-height:1.6;font-variant-numeric:tabular-nums;text-align:left}
 
@@ -329,7 +331,7 @@ footer .meta{margin-top:.35rem;font-size:.82rem}
           <div class="dm-track"></div><div class="dm-fill" id="demo-fill"></div>
           <b class="dm-stop" style="left:0"></b><b class="dm-stop" style="left:33.333%"></b><b class="dm-stop" style="left:66.667%"></b><b class="dm-stop" style="left:100%"></b>
           <span class="dm-thumb" id="demo-thumb"></span>
-          <div class="dm-labels"><span data-t="0" style="left:0">Mapping</span><span data-t="1" style="left:33.333%">Own frames</span><span data-t="2" style="left:66.667%">One-loop alignment</span><span data-t="3" style="left:100%">Joint optimization</span></div>
+          <div class="dm-labels"><span data-t="0" style="left:0">Mapping</span><span data-t="1" style="left:33.333%"><em class="l">Own frames</em><em class="s">Own</em></span><span data-t="2" style="left:66.667%"><em class="l">One-loop alignment</em><em class="s">One loop</em></span><span data-t="3" style="left:100%"><em class="l">Joint optimization</em><em class="s">Joint</em></span></div>
         </div>
       </div>
     </div>
@@ -1668,11 +1670,12 @@ import {LineMaterial} from 'three/addons/lines/LineMaterial.js';
 const DIR = 'assets/team4a/', SCENE = 'Horse';
 const COLS = ['#2674C8', '#C23B83', '#2E9E5B', '#7D52BA'], LOOP = '#E8742A';   // robot colours of the videos
 // ATE in units of the reference trajectory; per robot alone and in the team; team = the four robots under one alignment
-const ATE = {alone: [0.0766, 0.0553, 0.0659, 0.0734], joint: [0.0213, 0.0229, 0.0258, 0.0465], teamLoop: null, teamJoint: 0.0375};
+const ATE = {alone: [0.0766, 0.0553, 0.0659, 0.0734], joint: [0.0213, 0.0229, 0.0258, 0.0465], teamLoop: 0.0993, teamJoint: 0.0375};
 const MAPS = [0, 1, 2, 3].map(r => ({file: `alone${r}`, label: `Robot ${r + 1}`, robots: [r], ate: [ATE.alone[r]]}))
-  .concat([{file: 'team2', label: 'Robots 1–2', robots: [0, 1], ate: null}, {file: 'team3', label: 'Robots 1–3', robots: [0, 1, 2], ate: null},
+  .concat([{file: 'team2', label: 'Robots 1–2', robots: [0, 1], ate: [0.0337, 0.0372]}, {file: 'team3', label: 'Robots 1–3', robots: [0, 1, 2], ate: [0.0339, 0.0273, 0.0363]},
            {file: 'team4', label: 'Robots 1–4', robots: [0, 1, 2, 3], ate: ATE.joint}]);
-const FR = .05;                                              // frustum depth (display units)
+let FR = .05;                                                // frustum depth: set from the camera circle (display units)
+const RIG = {c: new THREE.Vector3(), R: 1};                    // centre and mean radius of the keyframe cameras (joint state)
 
 const $ = id => document.getElementById(id);
 const host = $('demo-stage'), canvas = $('demo-canvas'), badge = $('demo-badge'), load = $('demo-load'), cap = $('demo-caption'), ateBox = $('demo-ate');
@@ -1694,9 +1697,10 @@ const camGoal = {pos: new THREE.Vector3(), tgt: new THREE.Vector3()};
 
 const ptVert = `
   attribute vec3 p1; attribute vec3 p2; attribute vec3 rgb; attribute float robot; attribute float kt;
-  uniform float uT, uMap, uMix, uSize, uPix; uniform vec3 uCols[4]; uniform vec4 uShow;
+  uniform float uT, uMap, uMix, uSize, uPix, uCrop; uniform vec3 uCols[4], uC; uniform vec4 uShow;
   varying vec3 vC; varying float vA;
   void main() {
+    if (length(p2 - uC) > uCrop) { gl_Position = vec4(2., 2., 2., 1.); gl_PointSize = 0.; return; }
     float sh = robot < .5 ? uShow.x : robot < 1.5 ? uShow.y : robot < 2.5 ? uShow.z : uShow.w;
     float born = clamp((uMap - kt) * 25. + 1., 0., 1.);     // a keyframe's pixels appear when the robot reaches it
     vA = sh * born;
@@ -1713,9 +1717,10 @@ const dotFrag = `
   void main() { vec2 d = gl_PointCoord - .5; if (dot(d, d) > .25) discard; gl_FragColor = vec4(vC, vA); }`;
 const surfVert = `
   attribute float size; attribute vec3 nrm; attribute vec3 rgb;
-  uniform float uFocal, uScale; varying vec3 vC; varying float vA;
+  uniform float uFocal, uScale, uCrop, uOpacity; uniform vec3 uC; varying vec3 vC; varying float vA;
   void main() {
-    vA = 1.; vC = rgb;
+    vA = uOpacity; vC = rgb;
+    if (length(position - uC) > uCrop) { gl_Position = vec4(2., 2., 2., 1.); gl_PointSize = 0.; return; }
     if (dot(nrm, cameraPosition - position) < 0.) { gl_Position = vec4(2., 2., 2., 1.); gl_PointSize = 0.; return; }   // back faces
     vec4 mv = modelViewMatrix * vec4(position, 1.);
     gl_Position = projectionMatrix * mv;
@@ -1729,14 +1734,17 @@ function frustumSegs(c, q, fN, aspect, d, out) {
   for (let i = 0; i < 4; i++) { out.push(c.x, c.y, c.z, P[i].x, P[i].y, P[i].z, P[i].x, P[i].y, P[i].z, P[(i + 1) % 4].x, P[(i + 1) % 4].y, P[(i + 1) % 4].z); }
   return P;
 }
-function makeLines(width) {
-  const m = new LineMaterial({linewidth: width, vertexColors: true, transparent: true});
-  const l = new LineSegments2(new LineSegmentsGeometry(), m); l.frustumCulled = false; l.renderOrder = 3; scene.add(l); return l;
+function makeLines(width, max) {                         // buffers for up to max segments, written in place every frame
+  const m = new LineMaterial({linewidth: width, vertexColors: true, transparent: true}), g = new LineSegmentsGeometry();
+  g.setPositions(new Float32Array(max * 6)); g.setColors(new Float32Array(max * 6));
+  const l = new LineSegments2(g, m); l.frustumCulled = false; l.renderOrder = 3; l.userData.max = max; scene.add(l); return l;
 }
 function setLines(l, pos, col) {
-  l.visible = pos.length > 0;
-  if (!pos.length) return;
-  l.geometry.dispose(); l.geometry = new LineSegmentsGeometry(); l.geometry.setPositions(pos); l.geometry.setColors(col);
+  const n = Math.min(pos.length / 6, l.userData.max), g = l.geometry;
+  l.visible = n > 0; if (!n) return;
+  const P = g.attributes.instanceStart.data, C = g.attributes.instanceColorStart.data;
+  P.array.set(pos.length > n * 6 ? pos.slice(0, n * 6) : pos); C.array.set(col.length > n * 6 ? col.slice(0, n * 6) : col);
+  P.needsUpdate = C.needsUpdate = true; g.instanceCount = n;
 }
 
 async function init() {
@@ -1751,6 +1759,8 @@ async function init() {
   const n = meta.n, g = new THREE.BufferGeometry();
   opt.meta = meta;
   opt.kf = meta.kfs.map(k => ({r: k.r, t: k.t, f: k.f, S: ['own', 'att', 'joint'].map(s => ({c: new THREE.Vector3(...k[s].slice(0, 3)), q: new THREE.Quaternion(...k[s].slice(3))}))}));
+  opt.kf.forEach(k => RIG.c.add(k.S[2].c)); RIG.c.divideScalar(opt.kf.length);
+  RIG.R = opt.kf.reduce((a, k) => a + k.S[2].c.distanceTo(RIG.c), 0) / opt.kf.length; FR = .085 * RIG.R;
   g.setAttribute('position', new THREE.BufferAttribute(half(buf, 0, n * 3), 3));
   g.setAttribute('p1', new THREE.BufferAttribute(half(buf, n * 6, n * 3), 3));
   g.setAttribute('p2', new THREE.BufferAttribute(half(buf, n * 12, n * 3), 3));
@@ -1760,11 +1770,13 @@ async function init() {
   for (let i = 0; i < n; i++) kt[i] = opt.kf[kid[i]].t;
   g.setAttribute('kt', new THREE.BufferAttribute(kt, 1));
   opt.mat = new THREE.ShaderMaterial({vertexShader: ptVert, fragmentShader: dotFrag, transparent: true,
-    uniforms: {uT: {value: 0}, uMap: {value: 0}, uMix: {value: 0}, uSize: {value: 3.4}, uPix: {value: 1}, uShow: {value: new THREE.Vector4(1, 1, 1, 1)},
+    uniforms: {uC: {value: RIG.c}, uCrop: {value: 1.9 * RIG.R}, uT: {value: 0}, uMap: {value: 0}, uMix: {value: 0}, uSize: {value: 3.4 * RIG.R}, uPix: {value: 1}, uShow: {value: new THREE.Vector4(1, 1, 1, 1)},
       uCols: {value: COLS.map(c => new THREE.Color(c))}}});
   opt.points = new THREE.Points(g, opt.mat); opt.points.frustumCulled = false; scene.add(opt.points);
-  opt.lines = makeLines(1.6); opt.cur = makeLines(2.8); opt.loopLines = makeLines(2.4);
-  opt.faces = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({vertexColors: true, transparent: true, opacity: .28, side: THREE.DoubleSide, depthWrite: false}));
+  opt.lines = makeLines(1.1, opt.kf.length * 8); opt.cur = makeLines(2.4, 64); opt.loopLines = makeLines(2.2, meta.loops.length + 4);
+  const fg = new THREE.BufferGeometry();
+  fg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(4 * 6 * 3), 3)); fg.setAttribute('color', new THREE.BufferAttribute(new Float32Array(4 * 6 * 3), 3));
+  opt.faces = new THREE.Mesh(fg, new THREE.MeshBasicMaterial({vertexColors: true, transparent: true, opacity: .28, side: THREE.DoubleSide, depthWrite: false}));
   opt.faces.frustumCulled = false; opt.faces.renderOrder = 2; scene.add(opt.faces);
   load.hidden = true;
   new ResizeObserver(resize).observe(host); resize();
@@ -1793,30 +1805,34 @@ function updateOpt() {
   U.uShow.value.set(...[0, 1, 2, 3].map(r => solo < 0 || solo === r ? 1 : 0));
   const pos = [], col = [], cpos = [], ccol = [], face = [], fcol = [], lpos = [], lcol = [];
   const last = {}, ctr = new THREE.Vector3(); let nc = 0;
-  const loopOn = T > 2.5, anchorOn = T > 1.15 && T < 2.6;
-  const loopKf = new Set(loopOn ? opt.meta.loops.flatMap(([a, b]) => [a[1], b[1]]) : []);
+  const loopOn = solo < 0 && T > 2.5, anchorOn = solo < 0 && T > 1.15 && T < 2.6;   // inter-robot loops: only with the team
+  const loopKf = new Set();
   const anchorKf = new Set(anchorOn ? Object.values(opt.meta.anchors) : []);
+  const next = {};
   opt.kf.forEach((k, i) => {
-    if (k.t > map + 1e-6 || (solo >= 0 && k.r !== solo)) return;
+    if (solo >= 0 && k.r !== solo) return;
+    if (k.t > map + 1e-6) { if (!next[k.r] || k.t < next[k.r].t) next[k.r] = k; return; }
     const p = poseAt(k, u), orange = loopKf.has(i) || anchorKf.has(i), c = new THREE.Color(orange ? LOOP : COLS[k.r]);
-    const n0 = pos.length; frustumSegs(p.c, p.q, k.f, aspect, orange ? FR * 1.25 : FR, pos);
+    const grow = map < 1 ? .25 + .75 * ease((map - k.t) / .035) : 1;   // a new keyframe's frustum grows in
+    const n0 = pos.length; frustumSegs(p.c, p.q, k.f, aspect, (orange ? FR * 1.6 : FR) * grow, pos);
     for (let j = n0; j < pos.length; j += 3) col.push(c.r, c.g, c.b);
     if (!last[k.r] || k.t > last[k.r].k.t) last[k.r] = {k, p};
     ctr.add(p.c); nc++;
   });
-  if (map < 1) Object.values(last).forEach(({k, p}) => {      // the current keyframe of every robot while mapping
-    const c = new THREE.Color(COLS[k.r]), n0 = cpos.length, P = frustumSegs(p.c, p.q, k.f, aspect, FR * 1.9, cpos);
+  if (map < 1) Object.values(last).forEach(({k, p}) => {      // each robot's camera, moving between its keyframes
+    const nx = next[k.r]; let cam = p;
+    if (nx) { const v = ease((map - k.t) / (nx.t - k.t)), q = poseAt(nx, u); cam = {c: p.c.clone().lerp(q.c, v), q: p.q.clone().slerp(q.q, v)}; }
+    const c = new THREE.Color(COLS[k.r]), n0 = cpos.length, P = frustumSegs(cam.c, cam.q, k.f, aspect, FR * 2.2, cpos);
     for (let j = n0; j < cpos.length; j += 3) ccol.push(c.r, c.g, c.b);
     [[0, 1, 2], [0, 2, 3]].forEach(tri => tri.forEach(j => { face.push(P[j].x, P[j].y, P[j].z); fcol.push(c.r, c.g, c.b); }));
   });
   if (loopOn) opt.meta.loops.forEach(([[ra, ia], [rb, ib]]) => {
-    if (solo >= 0 && ra !== solo && rb !== solo) return;
     const a = poseAt(opt.kf[ia], u).c, b = poseAt(opt.kf[ib], u).c, c = new THREE.Color(LOOP);
     lpos.push(a.x, a.y, a.z, b.x, b.y, b.z); lcol.push(c.r, c.g, c.b, c.r, c.g, c.b);
   });
   setLines(opt.lines, pos, col); setLines(opt.cur, cpos, ccol); setLines(opt.loopLines, lpos, lcol);
-  opt.faces.geometry.dispose(); opt.faces.geometry = new THREE.BufferGeometry();
-  opt.faces.geometry.setAttribute('position', new THREE.Float32BufferAttribute(face, 3)); opt.faces.geometry.setAttribute('color', new THREE.Float32BufferAttribute(fcol, 3));
+  const fg = opt.faces.geometry; fg.attributes.position.array.set(face); fg.attributes.color.array.set(fcol);
+  fg.attributes.position.needsUpdate = fg.attributes.color.needsUpdate = true; fg.setDrawRange(0, face.length / 3);
   if (nc) { ctr.divideScalar(nc); camGoal.tgt.copy(ctr); }
 }
 function tick(now) {
@@ -1829,6 +1845,13 @@ function tick(now) {
     opt.mat.uniforms.uMix.value += (colourMix - opt.mat.uniforms.uMix.value) * .15;
     if (dirty) { updateOpt(); dirty = false; }
     if (autoCam) controls.target.lerp(camGoal.tgt, .04);
+  }
+  if (ren.fade) {
+    const f = ren.fade; if (f.t0 == null) f.t0 = now;
+    const a = ease((now - f.t0) / (reduce ? 1 : 1000));
+    if (f.from && f.from.points) mapOpacity(f.from, 1 - a);
+    mapOpacity(f.to, a);
+    if (a >= 1) ren.fade = null;
   }
   controls.update(); renderer.render(scene, camera);
 }
@@ -1856,8 +1879,8 @@ tl.addEventListener('keydown', e => { if (e.key === 'ArrowRight' || e.key === 'A
 
 function table(st) {
   const f = x => x == null ? '&ndash;' : x.toFixed(3), on = j => (j === Math.max(0, st - 1) ? ' class="on"' : '');
-  const rows = [['Own frames', ATE.alone, null], ['One-loop alignment', ATE.alone, ATE.teamLoop], ['Joint optimization', ATE.joint, ATE.teamJoint]];
-  ateBox.innerHTML = '<table><tr><th>ATE</th>' + COLS.map((c, r) => `<th><i style="background:${c}"></i>Robot ${r + 1}</th>`).join('') + '<th class="team">Team</th></tr>' +
+  const rows = [['<em class="l">Own frames</em><em class="s">Own</em>', ATE.alone, null], ['<em class="l">One-loop alignment</em><em class="s">One loop</em>', ATE.alone, ATE.teamLoop], ['<em class="l">Joint optimization</em><em class="s">Joint</em>', ATE.joint, ATE.teamJoint]];
+  ateBox.innerHTML = '<table><tr><th>ATE</th>' + COLS.map((c, r) => `<th><i style="background:${c}"></i><em class="l">Robot </em>${r + 1}</th>`).join('') + '<th class="team">Team</th></tr>' +
     rows.map(([name, v, team], j) => `<tr${on(j)}><td>${name}</td>${v.map(x => `<td>${f(x)}</td>`).join('')}<td class="team">${f(team)}</td></tr>`).join('') + '</table>';
 }
 function caption(st) {
@@ -1881,7 +1904,7 @@ function play(fromStart) {
   setPlay(true);
   if (fromStart || T > 2.98) setT(0);
   const end = solo >= 0 ? 1 : 3;
-  const seq = [[1, 6500 * (solo >= 0 ? .8 : 1), true], [2, 2600], [3, 2800]].filter(([to]) => to <= end && to > T + 1e-3);
+  const seq = [[1, 9000 * (solo >= 0 ? .8 : 1), true], [2, 2600], [3, 2800]].filter(([to]) => to <= end && to > T + 1e-3);
   const step = i => { if (i >= seq.length) { setPlay(false); return; } const [to, d, lin] = seq[i]; go(to, d * Math.max(.2, (to - T)), () => hold(900, () => step(i + 1)), lin); };
   step(0);
 }
@@ -1904,8 +1927,10 @@ $('demo-colour').addEventListener('click', e => { const b = e.target.closest('bu
   $('demo-colour').querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b))); });
 function view() {
   if (!camera) return;
-  if (mode === 'opt') { camera.position.set(0, 1.25, 2.3); controls.target.set(0, -.05, 0); camGoal.tgt.set(0, -.05, 0); controls.autoRotate = false; }
-  else { camera.position.set(.2, .75, 1.55); controls.target.set(0, -.1, 0); controls.autoRotate = !reduce; }
+  const R = RIG.R, c = RIG.c;
+  if (mode === 'opt') { camera.position.set(c.x, c.y + 1.7 * R, c.z + 3.1 * R); controls.target.copy(c); camGoal.tgt.copy(c); controls.autoRotate = false; }
+  else { camera.position.set(c.x + .3 * R, c.y + 1.1 * R, c.z + 2.4 * R); controls.target.copy(c); controls.autoRotate = !reduce; }
+  controls.minDistance = .2 * R; controls.maxDistance = 12 * R;
   autoCam = true; controls.update();
 }
 $('demo-reset').addEventListener('click', view);
@@ -1921,9 +1946,9 @@ async function getMap(m) {
     g.setAttribute('size', new THREE.BufferAttribute(half(buf, n * 6, n), 1));
     g.setAttribute('rgb', new THREE.BufferAttribute(new Uint8Array(buf, n * 8, n * 3), 3, true));
     g.setAttribute('nrm', new THREE.BufferAttribute(new Int8Array(buf, n * 11, n * 3), 3, true));
-    c.mat = new THREE.ShaderMaterial({vertexShader: surfVert, fragmentShader: dotFrag, uniforms: {uFocal: {value: 1}, uScale: {value: 1.35}}});
+    c.mat = new THREE.ShaderMaterial({vertexShader: surfVert, fragmentShader: dotFrag, transparent: true, uniforms: {uFocal: {value: 1}, uScale: {value: 1.35}, uOpacity: {value: 0}, uC: {value: RIG.c}, uCrop: {value: 2.2 * RIG.R}}});
     c.points = new THREE.Points(g, c.mat); c.points.frustumCulled = false; c.points.visible = false; scene.add(c.points);
-    c.lines = makeLines(1.4); const pos = [], col = [];
+    c.lines = makeLines(1.4, js.kfs.length * 8 + 8); const pos = [], col = [];
     js.kfs.forEach(([r, x, y, z, qx, qy, qz, qw, f]) => {
       const cc = new THREE.Color(COLS[r]), n0 = pos.length;
       frustumSegs(new THREE.Vector3(x, y, z), new THREE.Quaternion(qx, qy, qz, qw), f / 518, opt.meta ? opt.meta.aspect : .57, FR * .8, pos);
@@ -1944,27 +1969,38 @@ const mapsHost = $('demo-maps'), mapBtns = [];
   });
   mapsHost.append(grp);
 });
-const hideMaps = () => Object.values(ren.cache).forEach(x => { if (x.points) { x.points.visible = false; x.lines.visible = false; } });
+const hideMaps = () => { ren.cur = null; ren.fade = null; Object.values(ren.cache).forEach(x => { if (x.points) { x.points.visible = false; x.lines.visible = false; } }); };
+function mapOpacity(c, a) {
+  c.points.visible = c.lines.visible = a > .001; c.mat.uniforms.uOpacity.value = a; c.mat.depthWrite = a > .99; c.lines.material.opacity = a;
+}
+function fadeTo(c) {                                          // crossfade from the map on screen to c
+  if (ren.cur === c) return;
+  Object.values(ren.cache).forEach(x => x.points && x !== c && x !== ren.cur && mapOpacity(x, 0));
+  ren.fade = {from: ren.cur, to: c, t0: null}; ren.cur = c;
+}
+const preload = () => MAPS.forEach(m => getMap(m));
 async function showMap(k) {
   ren.k = k; const m = MAPS[k];
   mapBtns.forEach((b, i) => b.setAttribute('aria-pressed', String(i === k)));
   badge.textContent = m.robots.length === 1 ? `${m.label} alone` : `${m.label}, joint`;
   const f = x => x == null ? '&ndash;' : x.toFixed(3);
-  ateBox.innerHTML = '<table><tr><th>ATE</th>' + m.robots.map(r => `<th><i style="background:${COLS[r]}"></i>Robot ${r + 1}</th>`).join('') + '</tr>' +
+  ateBox.innerHTML = '<table><tr><th>ATE</th>' + m.robots.map(r => `<th><i style="background:${COLS[r]}"></i><em class="l">Robot </em>${r + 1}</th>`).join('') + '</tr>' +
     `<tr class="on"><td>${esc(m.label)}</td>${m.robots.map((r, j) => `<td>${f(m.ate && m.ate[j])}</td>`).join('')}</tr></table>`;
   cap.innerHTML = `<span class="fig-no">Figure 2.</span> TNTMA, ${SCENE}: ` + (m.robots.length === 1
     ? `the dense map ${m.label.toLowerCase()} builds alone (its own run and dense alignment), placed in the team frame by its best similarity transform.`
     : `the dense map of the team of ${m.label.toLowerCase()}, from its own team run (joint optimization and dense alignment).`) +
     ' Surfels, each the footprint of its pixel; frusta are keyframes. Drag to rotate, scroll to zoom.';
   if (!renderer) return;
-  const c = await getMap(m); hideMaps(); load.hidden = false; load.textContent = 'Loading';
-  try { await c.ready; } catch (e) { delete ren.cache[m.file]; if (mode === 'ren' && ren.k === k) load.textContent = 'Coming soon'; return; }
+  const c = await getMap(m); let ok = true;
+  if (!c.points) { load.hidden = false; load.textContent = 'Loading'; }
+  try { await c.ready; } catch (e) { ok = false; }
   if (mode !== 'ren' || ren.k !== k) return;
-  load.hidden = true; hideMaps(); c.points.visible = true; c.lines.visible = true;
+  if (!ok) { delete ren.cache[m.file]; hideMaps(); load.hidden = false; load.textContent = 'Coming soon'; return; }
+  load.hidden = true; fadeTo(c.points ? c : await c.ready);
 }
 const rplay = $('demo-rplay');
 function stopRen() { clearTimeout(ren.timer); ren.timer = null; rplay.innerHTML = ICON.play; rplay.setAttribute('aria-label', 'Play'); }
-function stepRen() { ren.timer = setTimeout(async () => { await showMap((ren.k + 1) % MAPS.length); if (ren.timer) stepRen(); }, 3800); }
+function stepRen() { ren.timer = setTimeout(async () => { await showMap((ren.k + 1) % MAPS.length); if (ren.timer) stepRen(); }, 4200); }
 rplay.addEventListener('click', () => { if (ren.timer) stopRen(); else { rplay.innerHTML = ICON.pause; rplay.setAttribute('aria-label', 'Pause'); showMap(0); stepRen(); } });
 
 /* modes */
@@ -1977,7 +2013,7 @@ function setMode(m) {
   [opt.points, opt.lines, opt.cur, opt.loopLines, opt.faces].forEach(o => o && (o.visible = m === 'opt'));
   view();
   if (m === 'opt') { stopRen(); load.hidden = true; hideMaps(); dirty = true; setT(T); }
-  else { stopPlay(); showMap(ren.k); }
+  else { stopPlay(); preload(); showMap(ren.k); }
 }
 tabs.forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
 setPlay(false); stopRen(); pickWho(-1); setT(0);
