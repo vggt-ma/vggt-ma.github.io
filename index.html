@@ -2016,9 +2016,13 @@ async function showMap(k) {
   load.hidden = true; fadeTo(c.points ? c : await c.ready);
 }
 const rplay = $('demo-rplay');
-function stopRen() { clearTimeout(ren.timer); ren.timer = null; rplay.innerHTML = ICON.play; rplay.setAttribute('aria-label', 'Play'); }
-function stepRen() { ren.timer = setTimeout(async () => { await showMap((ren.k + 1) % MAPS.length); if (ren.timer) stepRen(); }, 3500); }   // next map every 3.5 s
-rplay.addEventListener('click', () => { if (ren.timer) stopRen(); else { rplay.innerHTML = ICON.pause; rplay.setAttribute('aria-label', 'Pause'); showMap(0); stepRen(); } });
+function stopRen() { clearTimeout(ren.timer); ren.timer = null; ren.gen = (ren.gen || 0) + 1; rplay.innerHTML = ICON.play; rplay.setAttribute('aria-label', 'Play'); }
+function stepRen() {                                         // one chain at a time: a newer start or a stop ends the older one
+  const gen = ren.gen; clearTimeout(ren.timer);
+  ren.timer = setTimeout(() => { if (gen !== ren.gen) return; stepRen(); showMap((ren.k + 1) % MAPS.length); }, 3500);   // the next switch is set first: exactly 3.5 s apart
+}
+function startRen(k) { stopRen(); rplay.innerHTML = ICON.pause; rplay.setAttribute('aria-label', 'Pause'); showMap(k); stepRen(); }
+rplay.addEventListener('click', () => ren.timer ? stopRen() : startRen((ren.k + 1) % MAPS.length));   // resume with the next map
 
 /* modes */
 const tabs = [...document.querySelectorAll('.dm-tabs button')];
@@ -2030,7 +2034,7 @@ function setMode(m) {
   [opt.points, opt.lines, opt.cur, opt.loopLines, opt.faces].forEach(o => o && (o.visible = m === 'opt'));
   view();
   if (m === 'opt') { stopRen(); load.hidden = true; hideMaps(); dirty = true; setT(T); }
-  else { stopPlay(); preload(); showMap(ren.k); }
+  else { stopPlay(); preload(); startRen(0); }                 // rendering plays through the maps by itself
 }
 tabs.forEach(b => b.addEventListener('click', () => setMode(b.dataset.mode)));
 setPlay(false); stopRen(); pickWho(-1); setT(0);
